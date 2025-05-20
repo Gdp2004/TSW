@@ -1,0 +1,19 @@
+@charset "UTF-8";
+:root {
+	
+	--color-primary:   #2C6FA0;
+    --color-secondary: #4BA3A7;
+    --color-accent:    #A6D4C9;
+    --color-bg:        #F5F2EA;
+    --color-neutral-d: #708090;
+    --color-neutral-l: #E8E7E3;
+    
+}
+    
+body, h1, h2, p, button {
+	
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    
+}

@@ -1,0 +1,61 @@
+:root {
+      --color-primary:   #2C6FA0;
+      --color-secondary: #4BA3A7;
+      --color-accent:    #A6D4C9;
+      --color-bg:        #F5F2EA;
+      --color-neutral-d: #708090;
+      --color-neutral-l: #E8E7E3;
+    }
+    body, h1, h2, p, button {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      width: 100%;
+      background-color: var(--color-primary);
+    }
+    #advertisement {
+      display: flex;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0.5rem 1rem;
+      box-sizing: border-box;
+    }
+    #advertisement-content {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      height: 1.5em;
+    }
+    #promo-text {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: 50%;
+      transform: translate(0, -50%);
+      text-align: center;
+      opacity: 1;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      color: white;
+    }
+    .header-button {
+      flex: 0 0 50px;
+      width: 50px;
+      height: 50px;
+      border: none;
+      border-radius: 50%;
+      background-color: var(--color-secondary);
+      color: white;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .header-button:hover {
+      transform: scale(1.1);
+      background-color: var(--color-accent);
+    }
