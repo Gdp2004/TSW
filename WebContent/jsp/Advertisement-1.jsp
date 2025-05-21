@@ -12,7 +12,7 @@
   
   <link rel="stylesheet" href="styles/Advertisement-1.css">
   
-  <script src="scripts/advertisement-1.js" defer></script>
+  <script src="scripts/Advertisement-1.js" defer></script>
   
   
 </head>
@@ -22,7 +22,7 @@
   
     <div id="advertisement">
     
-      <button class="header-button" id="left-button">&lt;</button>
+      <button class="header-button" id="advertisement-1-left-button">&lt;</button>
       
       	<div id="advertisement-content">
       	
@@ -30,7 +30,7 @@
         	
       	</div>
       	
-      <button class="header-button" id="right-button">&gt;</button>
+      <button class="header-button" id="advertisement-1-right-button">&gt;</button>
       
     </div>
     

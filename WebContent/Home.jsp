@@ -5,15 +5,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UniBook - Home</title>
+  <title>UniBook</title>
+  
   <link rel="stylesheet" href="styles/Home.css">
+  <link rel="stylesheet" href="styles/Advertisement-1.css">
+  <link rel="stylesheet" href="styles/Nav-bar-1.css">
+  
+  <script src="scripts/Advertisement-1.js" defer></script>
+  
 </head>
+
 <body>
 
 
 	<!-- HEADER + TOP ADVERTISEMENT -->
 	
-	<jsp:include page="JSP/Advertisement-1.jsp"/>
+	<%@ include file="jsp/Advertisement-1.jsp" %>
+	
+	
+	<!-- NAVIGATION BAR -->
+	
+	<%@ include file="jsp/Nav-bar-1.jsp" %>
+	
 
    
 

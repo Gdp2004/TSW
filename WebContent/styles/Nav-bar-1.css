@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+:root {
+  --nav-bg:     #F5F2EA;
+  --link-color: #708090;
+  --link-hover: #2C6FA0;
+  --underline:  #A6D4C9;
+}
+
+#nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background-color: var(--nav-bg);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+#nav-bar a {
+  position: relative;
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding-bottom: 4px;
+  transition: color 0.2s;
+}
+
+
+#nav-bar a::after {
+  content: none;
+}
+
+#nav-bar a:hover,
+#nav-bar a:focus {
+  color: var(--link-hover);
+}
+
+
+.wishlist-text, .account-text {
+  position: relative;
+  padding-bottom: 4px; 
+  transition: color 0.3s;
+}
+
+.wishlist-text::after, .account-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--underline);
+  transition: width 0.3s ease;
+}
+
+
+#Wishlist-link a:hover .wishlist-text,
+#Wishlist-link a:focus .wishlist-text,
+#Account-link a:hover .account-text,
+#Account-link a:focus .account-text {
+  color: var(--link-hover);
+}
+
+#Wishlist-link a:hover .wishlist-text::after,
+#Wishlist-link a:focus .wishlist-text::after,
+#Account-link a:hover .account-text::after,
+#Account-link a:focus .account-text::after {
+  width: 100%;
+}
+
+
+#Wishlist-link a:hover i.fa-heart,
+#Wishlist-link a:focus i.fa-heart,
+#Account-link a:hover i.fa-user,
+#Account-link a:focus i.fa-user {
+  color: var(--link-hover);
+  transition: color 0.3s;
+}
+
+
+i.fa-heart, i.fa-user  {
+  
+  margin-right: 10px;
+  
+}
+
+
+#Account-link,
+#Wishlist-link {
+  margin-right: 30px;
+  order: 1;
+}
+
+#Account-link {
+  margin-left: auto;
+}
