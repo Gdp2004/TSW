@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+:root {
+  --color-neutral-d: #708090;
+  --color-neutral-l: #E8E7E3;
+  --color-bg:       #F5F2EA;
+}
+
+
+#bestseller-title{
+	
+	position: relative;
+	
+	display:block;
+	
+	top: 20px;
+	
+	left: 250px;
+	
+}

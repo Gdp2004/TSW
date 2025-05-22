@@ -59,7 +59,7 @@
   
   		<a href="#"> <!-- "https://github.com/AntonioWalter/Culturia.git" -->
 	
-			<img src="images/Bestseller-Culturia.png" alt="Libro Culturia">
+			<img src="images/Bestseller-Culturia.png" alt="Libro Culturia" width="100%">
 	
 		</a>
   	

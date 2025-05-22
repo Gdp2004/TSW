@@ -1,46 +1,45 @@
 /* styles/Logo-Search-Cart.css */
 @charset "UTF-8";
 :root {
-  --color-primary:   #2C6FA0;
-  --color-secondary: #4BA3A7;
-  --color-accent:    #A6D4C9;
-  --color-bg:        #F5F2EA;
-  --color-neutral-d: #708090;
-  --color-neutral-l: #E8E7E3;
-  --cart-badge-bg:   #2C6FA0;
+  --color-primary:    #2C6FA0;
+  --color-secondary:  #4BA3A7;
+  --color-accent:     #A6D4C9;
+  --color-bg:         #F5F2EA;
+  --color-neutral-d:  #708090;
+  --color-neutral-l:  #E8E7E3;
+  --cart-badge-bg:    #2C6FA0;
   --cart-badge-color: white;
 }
 
-#wrapper{
-	
-	width: 100%;
-	
+/* wrapper per centrare orizzontalmente */
+#wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
+/* layout principale */
 #logo-search-cart {
-	
-  margin-left: 144px;
   display: flex;
   align-items: center;
   gap: 50px;
 }
 
+/* logo fisso all’ingrosso dell’immagine */
 #logo-unibook {
-	position:relative;
   flex: 0 0 auto;
-  top:14px;
 }
 #logo-unibook img {
   width: 300px;
   height: 100px;
-  transition: transform 0.3s ease;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 #logo-unibook img:hover {
   transform: scale(1.05);
 }
 
-/* wrapper del toggle + ricerca */
+/* container toggle + ricerca + carrello */
 #container-search-bar {
   display: flex;
   align-items: center;
@@ -82,26 +81,27 @@
   transform: rotate(180deg);
 }
 
-/* form di ricerca */
+/* form di ricerca: ora flessibile */
 .search-form {
   display: flex;
   align-items: center;
-  width: 850px;
   height: 40px;
   background: white;
   border: 1px solid var(--color-neutral-l);
   border-radius: 0 4px 4px 0;
   overflow: hidden;
+  flex: 1;              /* occupa tutto lo spazio rimanente */
+  min-width: 0;         /* per prevenire lo sforamento in flexbox */
 }
 #search-input {
   flex: 1;
-  min-width: 400px;
   border: none;
   padding: 0 1rem;
   font-size: 1rem;
   color: var(--color-neutral-d);
   background: white;
   transition: border-color 0.2s;
+  min-width: 0;         /* imprescindibile in flex */
 }
 #search-input::placeholder {
   color: var(--color-neutral-d);
@@ -128,12 +128,12 @@
   font-size: 1rem;
 }
 
-/* carrello */
+/* carrello spinto a destra col auto margin */
 .cart-container {
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: 100px;
+  margin-left: auto;
 }
 .cart-link {
   color: var(--color-neutral-d);

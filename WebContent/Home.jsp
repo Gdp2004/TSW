@@ -11,9 +11,11 @@
   <link rel="stylesheet" href="styles/Advertisement-1.css">
   <link rel="stylesheet" href="styles/Nav-bar-1.css">
   <link rel="stylesheet" href="styles/Logo-Search-Cart.css">
-  <link rel="stylesheet" href="styles/Bestseller-Culturia.css">
+  <link rel="stylesheet" href="styles/Bestseller-List.css">
+
   
   <script src="scripts/Advertisement-1.js" defer></script>
+  <script src="scripts/Logo-Search-Bar.js" defer></script>
   
 </head>
 
@@ -37,6 +39,10 @@
 	
 	<%@ include file="jsp/Logo-Search-Cart.jsp" %>
 	
+	
+	<!-- BESTSELLERS CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-List.jsp" %>
 	
 
 </body>
