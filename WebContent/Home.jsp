@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="styles/Advertisement-1.css">
   <link rel="stylesheet" href="styles/Nav-bar-1.css">
   <link rel="stylesheet" href="styles/Logo-Search-Cart.css">
+  <link rel="stylesheet" href="styles/Bestseller-Culturia.css">
   
   <script src="scripts/Advertisement-1.js" defer></script>
   
@@ -32,12 +33,11 @@
 	</div>
 	
 	
-	<!-- LOGO + SEARCH BAR + CART/CHECKOUT -->
+	<!-- LOGO + SEARCH BAR + CART/CHECKOUT + BESTSELLER CULTURIA-->
 	
 	<%@ include file="jsp/Logo-Search-Cart.jsp" %>
 	
-
-   
+	
 
 </body>
 </html>
