@@ -25,7 +25,12 @@
 	
 	<!-- NAVIGATION BAR -->
 	
-	<%@ include file="jsp/Nav-bar-1.jsp" %>
+	<div id="container-Nav-bar-1">
+	
+		<%@ include file="jsp/Nav-bar-1.jsp" %>
+	
+	</div>
+	
 	
 	<!-- LOGO + SEARCH BAR + CART/CHECKOUT -->
 	
