@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 :root {
-  --nav-bg:     #F5F2EA;
+  --nav-bg:     rgb(255, 255, 255);
   --link-color: #708090;
   --link-hover: #2C6FA0;
   --underline:  #A6D4C9;
