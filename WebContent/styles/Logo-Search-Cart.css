@@ -1,9 +1,7 @@
-/* styles/Logo-Search-Cart.css */
 @charset "UTF-8";
 :root {
   --color-primary:    #2C6FA0;
   --color-secondary:  #4BA3A7;
-  --color-accent:     #A6D4C9;
   --color-bg:         #F5F2EA;
   --color-neutral-d:  #708090;
   --color-neutral-l:  #E8E7E3;
@@ -11,27 +9,23 @@
   --cart-badge-color: white;
 }
 
-/* wrapper per centrare orizzontalmente */
-#wrapper {
+/* HEADER WRAPPER: logo sopra, barra sotto */
+#header-wrapper {
   width: 100%;
-  display: flex;
-  justify-content: center;
+  background: var(--color-bg);
+  box-sizing: border-box;
+  padding: 1rem 2rem;
 }
 
-/* layout principale */
-#logo-search-cart {
-  display: flex;
-  align-items: center;
-  gap: 50px;
-}
-
-/* logo fisso all’ingrosso dell’immagine */
+/* LOGO CENTRATO */
 #logo-unibook {
-  flex: 0 0 auto;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 #logo-unibook img {
   width: 300px;
   height: 100px;
+  object-fit: contain;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -39,14 +33,15 @@
   transform: scale(1.05);
 }
 
-/* container toggle + ricerca + carrello */
-#container-search-bar {
+/* SECONDA RIGA: All + search + cart */
+#bar-row {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 10px;
+  width: 100%;
 }
 
-/* form toggle “All” */
+/* PULSANTE “All” */
 .toggle-form {
   height: 40px;
 }
@@ -57,8 +52,7 @@
   background: var(--color-neutral-l);
   color: var(--color-neutral-d);
   padding: 0 1rem;
-  font-size: 1rem;
-  font-weight: 600;
+  font: 1rem/1 Arial, sans-serif;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -67,7 +61,8 @@
 }
 #dropdown-button:hover,
 #dropdown-button:focus {
-  background: var(--color-bg);
+  background: var(--color-primary);
+  color: white;
 }
 #dropdown-button.active {
   background: var(--color-primary);
@@ -81,8 +76,9 @@
   transform: rotate(180deg);
 }
 
-/* form di ricerca: ora flessibile */
+/* BARRA DI RICERCA DINAMICA */
 .search-form {
+  flex: 1;
   display: flex;
   align-items: center;
   height: 40px;
@@ -90,18 +86,16 @@
   border: 1px solid var(--color-neutral-l);
   border-radius: 0 4px 4px 0;
   overflow: hidden;
-  flex: 1;              /* occupa tutto lo spazio rimanente */
-  min-width: 0;         /* per prevenire lo sforamento in flexbox */
+  box-sizing: border-box;
 }
 #search-input {
   flex: 1;
-  border: none;
   padding: 0 1rem;
-  font-size: 1rem;
+  border: none;
+  font: 1rem/1 Arial, sans-serif;
   color: var(--color-neutral-d);
   background: white;
   transition: border-color 0.2s;
-  min-width: 0;         /* imprescindibile in flex */
 }
 #search-input::placeholder {
   color: var(--color-neutral-d);
@@ -128,18 +122,16 @@
   font-size: 1rem;
 }
 
-/* carrello spinto a destra col auto margin */
-.cart-container {
-  position: relative;
+/* CARRELLO */
+#cart {
   display: flex;
   align-items: center;
-  margin-left: auto;
 }
 .cart-link {
+  position: relative;
   color: var(--color-neutral-d);
   font-size: 1.75rem;
   text-decoration: none;
-  position: relative;
 }
 .cart-link:hover {
   color: var(--color-secondary);
@@ -158,4 +150,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* SEZIONE SOTTO */
+#Bestseller-Culturia {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+#Bestseller-Culturia img {
+  max-width: 800px;
+  width: 100%;
+  height: auto;
 }
