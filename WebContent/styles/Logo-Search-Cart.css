@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 :root {
   --color-primary:    #2C6FA0;
   --color-secondary:  #4BA3A7;
@@ -16,8 +17,8 @@
   justify-content: space-between;
   width: 100%;
   background: var(--color-bg);
-  box-sizing: border-box;
   padding: 1rem 2rem;
+  box-sizing: border-box;
 }
 
 /* LOGO */
@@ -40,6 +41,11 @@
   flex: 1;
 }
 
+/* WRAPPER DROPDOWN */
+.dropdown {
+  position: relative;
+}
+
 /* PULSANTE “All” */
 #dropdown-button {
   height: 40px;
@@ -59,7 +65,7 @@
   background: var(--color-primary);
   color: white;
 }
-/* <i> deve essere inline-block per far ruotare l’icona */
+/* Icona inline-block e rotazione quando active */
 #dropdown-button i {
   display: inline-block;
   margin-left: 0.5rem;
@@ -67,6 +73,36 @@
 }
 #dropdown-button.active i {
   transform: rotate(180deg);
+}
+
+/* MENU A COMPARSA */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin: 0.25rem 0;
+  padding: 0.5rem 0;
+  list-style: none;
+  background: white;
+  border: 1px solid var(--color-neutral-l);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: none;
+  min-width: 160px;
+  z-index: 100;
+}
+.dropdown-menu.show {
+  display: block;
+}
+.dropdown-menu li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--color-neutral-d);
+  font-size: 0.9rem;
+}
+.dropdown-menu li a:hover {
+  background: var(--color-neutral-l);
 }
 
 /* BARRA DI RICERCA */
@@ -154,6 +190,5 @@
 }
 #Bestseller-Culturia img {
   max-width: 100%;
-  width: 100%;
   height: auto;
 }
