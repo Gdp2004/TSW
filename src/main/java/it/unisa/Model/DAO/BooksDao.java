@@ -9,11 +9,77 @@ import it.unisa.Model.DriverManagerConnectionPool;
 
 public class BooksDao {
 
-    public List<Books> doRetrieveAll(int offset, int limit) {
-        String sql = "SELECT isbn, title, author, description, price, stock_qty, image_url, category_id "
-                   + "FROM Book LIMIT ?, ?";
+    public void insert(Books b) {
+        String sql = "INSERT INTO Book(isbn, title, author, description, " +
+                     "price, stock_qty, image_data, image_mime, image_name, category_id) " +
+                     "VALUES(?,?,?,?,?,?,?,?,?,?)";
         try (Connection con = DriverManagerConnectionPool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, b.getIsbn());
+            ps.setString(2, b.getTitle());
+            ps.setString(3, b.getAuthor());
+            ps.setString(4, b.getDescription());
+            ps.setBigDecimal(5, b.getPrice());
+            ps.setInt(6, b.getStockQty());
+            if (b.getImageData() != null) {
+                ps.setBytes(7, b.getImageData());
+                ps.setString(8, b.getImageMime());
+                ps.setString(9, b.getImageName());
+            } else {
+                ps.setNull(7, Types.LONGVARBINARY);
+                ps.setNull(8, Types.VARCHAR);
+                ps.setNull(9, Types.VARCHAR);
+            }
+            if (b.getCategoryId() != null) {
+                ps.setInt(10, b.getCategoryId());
+            } else {
+                ps.setNull(10, Types.INTEGER);
+            }
+
+            if (ps.executeUpdate() != 1) {
+                throw new RuntimeException("INSERT error.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Books findByIsbn(String isbn) {
+        String sql = "SELECT isbn, title, author, description, price, stock_qty, " +
+                     "image_data, image_mime, image_name, category_id " +
+                     "FROM Book WHERE isbn=?";
+        try (Connection con = DriverManagerConnectionPool.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, isbn);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) return null;
+
+            Books b = new Books();
+            b.setIsbn(rs.getString("isbn"));
+            b.setTitle(rs.getString("title"));
+            b.setAuthor(rs.getString("author"));
+            b.setDescription(rs.getString("description"));
+            b.setPrice(rs.getBigDecimal("price"));
+            b.setStockQty(rs.getInt("stock_qty"));
+            b.setImageData(rs.getBytes("image_data"));
+            b.setImageMime(rs.getString("image_mime"));
+            b.setImageName(rs.getString("image_name"));
+            b.setCategoryId(rs.getObject("category_id", Integer.class));
+            return b;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Books> findAll(int offset, int limit) {
+        String sql = "SELECT isbn, title, author, description, price, stock_qty, " +
+                     "image_data, image_mime, image_name, category_id " +
+                     "FROM Book LIMIT ?, ?";
+        try (Connection con = DriverManagerConnectionPool.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setInt(1, offset);
             ps.setInt(2, limit);
             ResultSet rs = ps.executeQuery();
@@ -26,7 +92,9 @@ public class BooksDao {
                 b.setDescription(rs.getString("description"));
                 b.setPrice(rs.getBigDecimal("price"));
                 b.setStockQty(rs.getInt("stock_qty"));
-                b.setImageUrl(rs.getString("image_url"));
+                b.setImageData(rs.getBytes("image_data"));
+                b.setImageMime(rs.getString("image_mime"));
+                b.setImageName(rs.getString("image_name"));
                 b.setCategoryId(rs.getObject("category_id", Integer.class));
                 list.add(b);
             }
@@ -36,66 +104,34 @@ public class BooksDao {
         }
     }
 
-    public Books doRetrieveByISBN(String isbn) {
-        String sql = "SELECT * FROM Book WHERE isbn = ?";
+    public void update(Books b) {
+        String sql = "UPDATE Book SET title=?, author=?, description=?, price=?, " +
+                     "stock_qty=?, image_data=?, image_mime=?, image_name=?, category_id=? " +
+                     "WHERE isbn=?";
         try (Connection con = DriverManagerConnectionPool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, isbn);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Books b = new Books();
-                b.setIsbn(isbn);
-                b.setTitle(rs.getString("title"));
-                b.setAuthor(rs.getString("author"));
-                b.setDescription(rs.getString("description"));
-                b.setPrice(rs.getBigDecimal("price"));
-                b.setStockQty(rs.getInt("stock_qty"));
-                b.setImageUrl(rs.getString("image_url"));
-                b.setCategoryId(rs.getObject("category_id", Integer.class));
-                return b;
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public void doSave(Books book) {
-        String sql = "INSERT INTO Book(isbn, title, author, description, price, stock_qty, image_url, category_id) "
-                   + "VALUES(?,?,?,?,?,?,?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, book.getIsbn());
-            ps.setString(2, book.getTitle());
-            ps.setString(3, book.getAuthor());
-            ps.setString(4, book.getDescription());
-            ps.setBigDecimal(5, book.getPrice());
-            ps.setInt(6, book.getStockQty());
-            ps.setString(7, book.getImageUrl());
-            if (book.getCategoryId() != null) ps.setInt(8, book.getCategoryId());
-            else ps.setNull(8, Types.INTEGER);
-            if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("INSERT error.");
+            ps.setString(1, b.getTitle());
+            ps.setString(2, b.getAuthor());
+            ps.setString(3, b.getDescription());
+            ps.setBigDecimal(4, b.getPrice());
+            ps.setInt(5, b.getStockQty());
+            if (b.getImageData() != null) {
+                ps.setBytes(6, b.getImageData());
+                ps.setString(7, b.getImageMime());
+                ps.setString(8, b.getImageName());
+            } else {
+                ps.setNull(6, Types.LONGVARBINARY);
+                ps.setNull(7, Types.VARCHAR);
+                ps.setNull(8, Types.VARCHAR);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+            if (b.getCategoryId() != null) {
+                ps.setInt(9, b.getCategoryId());
+            } else {
+                ps.setNull(9, Types.INTEGER);
+            }
+            ps.setString(10, b.getIsbn());
 
-    public void doUpdate(Books book) {
-        String sql = "UPDATE Book SET title=?, author=?, description=?, price=?, stock_qty=?, image_url=?, category_id=? "
-                   + "WHERE isbn=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, book.getTitle());
-            ps.setString(2, book.getAuthor());
-            ps.setString(3, book.getDescription());
-            ps.setBigDecimal(4, book.getPrice());
-            ps.setInt(5, book.getStockQty());
-            ps.setString(6, book.getImageUrl());
-            if (book.getCategoryId() != null) ps.setInt(7, book.getCategoryId());
-            else ps.setNull(7, Types.INTEGER);
-            ps.setString(8, book.getIsbn());
             if (ps.executeUpdate() != 1) {
                 throw new RuntimeException("UPDATE error.");
             }
@@ -104,10 +140,11 @@ public class BooksDao {
         }
     }
 
-    public void doDelete(String isbn) {
+    public void delete(String isbn) {
         String sql = "DELETE FROM Book WHERE isbn=?";
         try (Connection con = DriverManagerConnectionPool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setString(1, isbn);
             if (ps.executeUpdate() != 1) {
                 throw new RuntimeException("DELETE error.");

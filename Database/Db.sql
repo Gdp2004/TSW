@@ -7,7 +7,7 @@ USE Bookstore;
 -- --------------------------------------------------
 -- 1) CATEGORIE DI LIBRI
 -- --------------------------------------------------
-CREATE TABLE IF NOT EXISTS Category (
+CREATE TABLE IF NOT EXISTS Category (	
   category_id   INT AUTO_INCREMENT PRIMARY KEY,
   name          VARCHAR(100)    NOT NULL,
   description   TEXT,
@@ -24,7 +24,12 @@ CREATE TABLE IF NOT EXISTS Book (
   description    TEXT,
   price          DECIMAL(10,2)   NOT NULL,
   stock_qty      INT             NOT NULL DEFAULT 0,
-  image_url      VARCHAR(500),
+
+  -- qui la nuova colonna per l’immagine
+  image_data     LONGBLOB,                  -- fino a 4 GB di dati
+  image_mime     VARCHAR(100),              -- tipo MIME (es. 'image/jpeg')
+  image_name     VARCHAR(255),              -- nome file originale
+
   category_id    INT,
   FOREIGN KEY (category_id)
     REFERENCES Category(category_id)

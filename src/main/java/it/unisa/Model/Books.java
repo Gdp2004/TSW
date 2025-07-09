@@ -9,22 +9,28 @@ public class Books {
     private String description;
     private BigDecimal price;
     private int stockQty;
-    private String imageUrl;
+    // nuovi campi per l’immagine
+    private byte[] imageData;
+    private String imageMime;
+    private String imageName;
+    // fine nuovi campi
     private Integer categoryId;
 
-    public Books() {
-        // costruttore di default
-    }
+    public Books() { }
 
     public Books(String isbn, String title, String author, String description,
-                 BigDecimal price, int stockQty, String imageUrl, Integer categoryId) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.price = price;
-        this.stockQty = stockQty;
-        this.imageUrl = imageUrl;
+                 BigDecimal price, int stockQty,
+                 byte[] imageData, String imageMime, String imageName,
+                 Integer categoryId) {
+        this.isbn       = isbn;
+        this.title      = title;
+        this.author     = author;
+        this.description= description;
+        this.price      = price;
+        this.stockQty   = stockQty;
+        this.imageData  = imageData;
+        this.imageMime  = imageMime;
+        this.imageName  = imageName;
         this.categoryId = categoryId;
     }
 
@@ -70,11 +76,25 @@ public class Books {
         this.stockQty = stockQty;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public byte[] getImageData() {
+        return imageData;
     }
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
+    }
+
+    public String getImageMime() {
+        return imageMime;
+    }
+    public void setImageMime(String imageMime) {
+        this.imageMime = imageMime;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public Integer getCategoryId() {
@@ -93,7 +113,9 @@ public class Books {
                ", description='" + description + '\'' +
                ", price=" + price +
                ", stockQty=" + stockQty +
-               ", imageUrl='" + imageUrl + '\'' +
+               ", imageName='" + imageName + '\'' +
+               ", imageMime='" + imageMime + '\'' +
+               ", imageData=" + (imageData != null ? imageData.length + " bytes" : "null") +
                ", categoryId=" + categoryId +
                '}';
     }
