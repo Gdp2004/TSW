@@ -17,7 +17,7 @@
 			<div id="bestseller-left-arrow">
 			
 				
-			
+	
 			</div>
 			
 			<div id="bestseller-carousel">
