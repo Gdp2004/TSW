@@ -1,33 +1,24 @@
-// File: src/main/java/it/unisa/Model/LibriDAO.java
 package it.unisa.Model.DAO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import it.unisa.Model.Books;
 
-
 public class BooksDao {
-	
-	private static DataSource ds;
-	
-	static {
-		try {
-			Context initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/Database");
+    private final DataSource ds;
 
-		} catch (NamingException e) {
-			System.out.println("Error:" + e.getMessage());
-		}
-	}
+    public BooksDao(DataSource ds) {
+        this.ds = ds;
+    }
 
     public void insert(Books b) {
         String sql = """
@@ -36,9 +27,6 @@ public class BooksDao {
               price, stock_qty, image_path, category_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """;
-        
-        
-        
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -62,10 +50,10 @@ public class BooksDao {
             }
 
             if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("INSERT error.");
+                throw new RuntimeException("INSERT failed");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database insert error", e);
         }
     }
 
@@ -81,20 +69,22 @@ public class BooksDao {
 
             ps.setString(1, isbn);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) return null;
-
-            Books b = new Books();
-            b.setIsbn(rs.getString("isbn"));
-            b.setTitle(rs.getString("title"));
-            b.setAuthor(rs.getString("author"));
-            b.setDescription(rs.getString("description"));
-            b.setPrice(rs.getBigDecimal("price"));
-            b.setStockQty(rs.getInt("stock_qty"));
-            b.setImagePath(rs.getString("image_path"));
-            b.setCategoryId(rs.getObject("category_id", Integer.class));
-            return b;
+            if (rs.next()) {
+                Books b = new Books();
+                b.setIsbn(rs.getString("isbn"));
+                b.setTitle(rs.getString("title"));
+                b.setAuthor(rs.getString("author"));
+                b.setDescription(rs.getString("description"));
+                b.setPrice(rs.getBigDecimal("price"));
+                b.setStockQty(rs.getInt("stock_qty"));
+                b.setImagePath(rs.getString("image_path"));
+                b.setCategoryId(rs.getObject("category_id", Integer.class));
+                return b;
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database query error", e);
         }
     }
 
@@ -112,6 +102,7 @@ public class BooksDao {
             ps.setInt(2, limit);
             ResultSet rs = ps.executeQuery();
             List<Books> list = new ArrayList<>();
+
             while (rs.next()) {
                 Books b = new Books();
                 b.setIsbn(rs.getString("isbn"));
@@ -126,7 +117,7 @@ public class BooksDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database query error", e);
         }
     }
 
@@ -166,10 +157,10 @@ public class BooksDao {
             ps.setString(8, b.getIsbn());
 
             if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("UPDATE error.");
+                throw new RuntimeException("UPDATE failed");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database update error", e);
         }
     }
 
@@ -177,51 +168,37 @@ public class BooksDao {
         String sql = "DELETE FROM Book WHERE isbn = ?";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setString(1, isbn);
+
             if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("DELETE error.");
+                throw new RuntimeException("DELETE failed");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database delete error", e);
         }
     }
-    
-    
-    /**
-     * Recupera i libri di una specifica categoria, con paginazione.
-     *
-     * @param categoryId l'id della categoria dei libri da cercare
-     * @param offset     l’offset per LIMIT
-     * @param limit      il numero massimo di righe da restituire
-     * @return lista di Books appartenenti alla categoria richiesta
-     */
-    public List<Books> findByCategory(int categoryId, int offset, int limit) {
-        String sql = """
-            SELECT isbn, title, author, image_path
-              FROM Book
-             WHERE category_id = ?
-             LIMIT ?, ?
-            """;
+
+    public List<Books> findByCategory(int categoryId) {
+        String sql = "SELECT title, image_path FROM Book WHERE category_id = ?";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, categoryId);
-            ps.setInt(2, offset);
-            ps.setInt(3, limit);
 
             ResultSet rs = ps.executeQuery();
             List<Books> list = new ArrayList<>();
+
             while (rs.next()) {
                 Books b = new Books();
-                b.setIsbn("isbn");
                 b.setTitle(rs.getString("title"));
-                b.setAuthor(rs.getString("author"));
                 b.setImagePath(rs.getString("image_path"));
+                b.setCategoryId(categoryId);
                 list.add(b);
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database query error", e);
         }
     }
 

@@ -1,7 +1,12 @@
 package it.unisa.Model.DAO;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +15,12 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-
 import it.unisa.Model.Order;
 
 public class OrderDao {
-	
+
 	private static DataSource ds;
-	
+
 	static {
 		try {
 			Context initCtx = new InitialContext();
@@ -81,8 +85,11 @@ public class OrderDao {
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, order.getCartId());
-            if (order.getUserId() != null) ps.setInt(2, order.getUserId());
-            else ps.setNull(2, Types.INTEGER);
+            if (order.getUserId() != null) {
+				ps.setInt(2, order.getUserId());
+			} else {
+				ps.setNull(2, Types.INTEGER);
+			}
             ps.setString(3, order.getStatus());
             ps.setBigDecimal(4, order.getTotalAmount());
             if (ps.executeUpdate() != 1) {

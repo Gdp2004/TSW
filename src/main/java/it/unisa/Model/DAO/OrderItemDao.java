@@ -2,7 +2,11 @@ package it.unisa.Model.DAO;
 
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +18,9 @@ import javax.sql.DataSource;
 import it.unisa.Model.OrderItem;
 
 public class OrderItemDao {
-	
+
 	private static DataSource ds;
-	
+
 	static {
 		try {
 			Context initCtx = new InitialContext();

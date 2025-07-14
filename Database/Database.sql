@@ -121,6 +121,6 @@ VALUES(
     'La storia di Bilbo Baggins, un hobbit riluttante che si imbarca in un epico viaggio per riconquistare il tesoro custodito dal drago Smaug.', 
     12.90, 
     50, 
-    'cover1.jpg',
+    'cover1.png',
     1
 );

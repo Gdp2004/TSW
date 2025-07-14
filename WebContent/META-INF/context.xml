@@ -2,15 +2,16 @@
 
 <Context>
 
-  <Resource name="jdbc/BookstoreDB"
-auth="Container"
-driverClassName="com.mysql.cj.jdbc.Driver"
-type="javax.sql.DataSource"
-username="root"
-password="admin"
-url=
-"jdbc:mysql://localhost:3306/Database
-?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDa
-tetimeCode=false&amp;serverTimezone=UTC"/>
+<Resource name="jdbc/Database"
+          auth="Container"
+          factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
+          type="javax.sql.DataSource"
+          driverClassName="com.mysql.cj.jdbc.Driver"
+          url="jdbc:mysql://localhost:3306/Bookstore?useSSL=false&amp;serverTimezone=UTC"
+          username="root"
+          password="admin"
+          maxTotal="20"
+          maxIdle="10"
+          maxWaitMillis="10000"/>
 
 </Context>
