@@ -11,27 +11,33 @@
     rel="stylesheet"
   />
   <style>
+    /* 5 items per slide: 100%/5 = 20% each */
     .book-col {
-      flex: 0 0 14.2857%;
-      max-width: 14.2857%;
-      padding: 0 .5rem;
+      flex: 0 0 20%;
+      max-width: 20%;
+      /* padding for spacing */
+      padding: 0 0.75rem;
+      box-sizing: border-box;
       text-align: center;
     }
+    
     .book-col img {
       width: 100%;
       height: 300px;
       object-fit: cover;
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     .book-col h6 {
       font-size: 1rem;
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .book-col small {
-      font-size: .85rem;
+      font-size: 0.85rem;
       color: #555;
       white-space: nowrap;
       overflow: hidden;
@@ -44,19 +50,18 @@
       transform: translateY(-50%);
       z-index: 10;
     }
-    .carousel-control-button.prev { left: -60px; }
-    .carousel-control-button.next { right: -60px; }
+    .carousel-control-button.prev { left: -50px; }
+    .carousel-control-button.next { right: -50px; }
   </style>
 </head>
 <body>
 
 <%
-  // 1) Carico tutti i bestsellers
   DataSource ds = (DataSource)application.getAttribute("DataSource");
   List<Books> all = new BooksDao(ds).findByCategory(1);
-  // 2) Prendo solo i primi 12 (se ce ne sono)
+  // prendo fino a 12, ma mostro 5 per slide
   List<Books> books = (all.size() > 12) ? all.subList(0, 12) : all;
-  final int perSlide = 7;
+  final int perSlide = 5;
 %>
 
 <div class="container my-4 position-relative">
@@ -78,7 +83,6 @@
 
     <div class="carousel-inner">
       <% if (books != null && !books.isEmpty()) {
-   
            for (int i = 0; i < books.size(); i += perSlide) {
              String active = (i == 0) ? " active" : "";
       %>
