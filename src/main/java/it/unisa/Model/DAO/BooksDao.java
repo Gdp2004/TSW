@@ -5,6 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import it.unisa.Model.Books;
@@ -13,6 +16,18 @@ import it.unisa.Model.Books;
 public class BooksDao {
 	
 	private static DataSource ds;
+	
+	static {
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			ds = (DataSource) envCtx.lookup("jdbc/Database");
+
+		} catch (NamingException e) {
+			System.out.println("Error:" + e.getMessage());
+		}
+	}
 
     public void insert(Books b) {
         String sql = """

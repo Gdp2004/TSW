@@ -6,13 +6,28 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import it.unisa.Model.OrderItem;
 
 public class OrderItemDao {
 	
-	private DataSource ds;
+	private static DataSource ds;
+	
+	static {
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			ds = (DataSource) envCtx.lookup("jdbc/Database");
+
+		} catch (NamingException e) {
+			System.out.println("Error:" + e.getMessage());
+		}
+	}
 
     public List<OrderItem> doRetrieveByOrderId(int orderId) {
         String sql = "SELECT order_item_id, order_id, isbn, quantity, unit_price "

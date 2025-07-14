@@ -26,9 +26,7 @@ CREATE TABLE IF NOT EXISTS Book (
   stock_qty      INT             NOT NULL DEFAULT 0,
 
   -- qui la nuova colonna per l’immagine
-  image_data     LONGBLOB,                  -- fino a 4 GB di dati
-  image_mime     VARCHAR(100),              -- tipo MIME (es. 'image/jpeg')
-  image_name     VARCHAR(255),              -- nome file originale
+  image_path    VARCHAR(500)	NOT NULL,
 
   category_id    INT,
   FOREIGN KEY (category_id)
@@ -84,7 +82,7 @@ CREATE TABLE IF NOT EXISTS CartItem (
 -- --------------------------------------------------
 -- 6) ORDINI
 -- --------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Order` (
+CREATE TABLE IF NOT EXISTS Orders (
   order_id       INT AUTO_INCREMENT PRIMARY KEY,
   cart_id        CHAR(36)        NOT NULL,
   user_id        INT             NULL,
@@ -107,10 +105,22 @@ CREATE TABLE IF NOT EXISTS OrderItem (
   quantity       INT             NOT NULL,
   unit_price     DECIMAL(10,2)   NOT NULL,
   FOREIGN KEY (order_id)
-    REFERENCES `Order`(order_id)
+    REFERENCES Orders(order_id)
       ON DELETE CASCADE,
   FOREIGN KEY (isbn)
     REFERENCES Book(isbn)
       ON DELETE RESTRICT
 );
 
+
+INSERT INTO Book (isbn, title, author, description, price, stock_qty, image_path, category_id)
+VALUES(
+	'978-8804668237', 
+    'Lo Hobbit', 
+    'J.R.R. Tolkien', 
+    'La storia di Bilbo Baggins, un hobbit riluttante che si imbarca in un epico viaggio per riconquistare il tesoro custodito dal drago Smaug.', 
+    12.90, 
+    50, 
+    'cover1.jpg',
+    1
+);

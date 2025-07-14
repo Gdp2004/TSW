@@ -6,6 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import it.unisa.Model.Cart;
@@ -13,7 +16,19 @@ import it.unisa.Model.Cart;
 
 public class CartDao {
 	
-	private DataSource ds;
+	private static DataSource ds;
+	
+	static {
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			ds = (DataSource) envCtx.lookup("jdbc/Database");
+
+		} catch (NamingException e) {
+			System.out.println("Error:" + e.getMessage());
+		}
+	}
 
     public List<Cart> doRetrieveAll(int offset, int limit) {
         String sql = "SELECT cart_id, user_id, created_at, last_update FROM Cart LIMIT ?, ?";

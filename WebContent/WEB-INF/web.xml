@@ -5,6 +5,10 @@
     <welcome-file>Home.jsp</welcome-file>
   </welcome-file-list>
   
+  <listener>
+        <listener-class>model.DataSourceInizialize</listener-class>
+    </listener>
+  
   <servlet>
     <servlet-name>BestsellerCarousel</servlet-name>
     <servlet-class>it.unisa.Controller.BestsellerCarousel</servlet-class>

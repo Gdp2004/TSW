@@ -5,6 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 
@@ -12,7 +15,19 @@ import it.unisa.Model.Order;
 
 public class OrderDao {
 	
-	private DataSource ds;
+	private static DataSource ds;
+	
+	static {
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			ds = (DataSource) envCtx.lookup("jdbc/Database");
+
+		} catch (NamingException e) {
+			System.out.println("Error:" + e.getMessage());
+		}
+	}
 
     public List<Order> doRetrieveAll(int offset, int limit) {
         String sql = "SELECT order_id, cart_id, user_id, status, total_amount, created_at "
