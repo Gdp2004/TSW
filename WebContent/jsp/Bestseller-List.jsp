@@ -1,40 +1,57 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.List, it.unisa.Model.Books" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>Bestseller Carousel</title>
+	
 </head>
 <body>
-
-	<section id="bestseller-section">
 	
-		<h2 id="bestseller-title">Bestseller</h2>
-		
-		<div id="bestseller-container">
-		
-			<div id="bestseller-left-arrow">
+	<h2>BestSellers</h2>
+	
+	<%
+	
+		List<Books> books = (List<Books>) request.getAttribute("bestsellers");
+	
+		if(books != null && !books.isEmpty()){
+	
+	%>
+	
+			<div id="Bestseller-div">
 			
+				<%
+					for(Books c: books){ 
+					
+				%>
 				
-	
+						<img src="images/Covers/<%=c.getImagePath()%>">
+						
+						
+				<%
+				
+					}
+				
+				%>
+			
 			</div>
 			
-			<div id="bestseller-carousel">
 			
-				
-			
-			</div>
-			
-			<div id="bestseller-right-arrow">
-			
-				
-			
-			</div>
-		
-		</div>
+	<%
 	
-	</section>
-
+		}else{
+	
+	%>
+	
+		<p>Non trovati</p>
+		
+		
+	<%
+	
+		}
+	
+	%>
+	
 </body>
 </html>

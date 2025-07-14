@@ -5,14 +5,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unisa.Model.DriverManagerConnectionPool;
+import javax.sql.DataSource;
+
 import it.unisa.Model.UserAccount;
 
 public class UserAccountDao {
+	
+	private DataSource ds;
 
     public List<UserAccount> doRetrieveAll(int offset, int limit) {
         String sql = "SELECT user_id, email, password_hash, full_name, created_at FROM UserAccount LIMIT ?, ?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, offset);
             ps.setInt(2, limit);
@@ -35,7 +38,7 @@ public class UserAccountDao {
 
     public UserAccount doRetrieveById(int id) {
         String sql = "SELECT * FROM UserAccount WHERE user_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -56,7 +59,7 @@ public class UserAccountDao {
 
     public void doSave(UserAccount user) {
         String sql = "INSERT INTO UserAccount(email, password_hash, full_name) VALUES(?,?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
@@ -75,7 +78,7 @@ public class UserAccountDao {
 
     public void doUpdate(UserAccount user) {
         String sql = "UPDATE UserAccount SET email=?, password_hash=?, full_name=? WHERE user_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
@@ -91,7 +94,7 @@ public class UserAccountDao {
 
     public void doDelete(int id) {
         String sql = "DELETE FROM UserAccount WHERE user_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() != 1) {

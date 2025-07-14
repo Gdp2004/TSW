@@ -5,14 +5,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import it.unisa.Model.Category;
-import it.unisa.Model.DriverManagerConnectionPool;
 
 public class CategoryDao {
+	
+	private DataSource ds;
 
     public List<Category> doRetrieveAll(int offset, int limit) {
         String sql = "SELECT category_id, name, description FROM Category LIMIT ?, ?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, offset);
             ps.setInt(2, limit);
@@ -33,7 +36,7 @@ public class CategoryDao {
 
     public Category doRetrieveById(int id) {
         String sql = "SELECT * FROM Category WHERE category_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -52,7 +55,7 @@ public class CategoryDao {
 
     public void doSave(Category category) {
         String sql = "INSERT INTO Category(name, description) VALUES(?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
@@ -70,7 +73,7 @@ public class CategoryDao {
 
     public void doUpdate(Category category) {
         String sql = "UPDATE Category SET name=?, description=? WHERE category_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
@@ -85,7 +88,7 @@ public class CategoryDao {
 
     public void doDelete(int id) {
         String sql = "DELETE FROM Category WHERE category_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() != 1) {

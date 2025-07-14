@@ -6,15 +6,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unisa.Model.DriverManagerConnectionPool;
+import javax.sql.DataSource;
+
 import it.unisa.Model.OrderItem;
 
 public class OrderItemDao {
+	
+	private DataSource ds;
 
     public List<OrderItem> doRetrieveByOrderId(int orderId) {
         String sql = "SELECT order_item_id, order_id, isbn, quantity, unit_price "
                    + "FROM OrderItem WHERE order_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
@@ -36,7 +39,7 @@ public class OrderItemDao {
 
     public OrderItem doRetrieveById(int id) {
         String sql = "SELECT * FROM OrderItem WHERE order_item_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -57,7 +60,7 @@ public class OrderItemDao {
 
     public void doSave(OrderItem item) {
         String sql = "INSERT INTO OrderItem(order_id, isbn, quantity, unit_price) VALUES(?,?,?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, item.getOrderId());
             ps.setString(2, item.getIsbn());
@@ -77,7 +80,7 @@ public class OrderItemDao {
 
     public void doDelete(int id) {
         String sql = "DELETE FROM OrderItem WHERE order_item_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() != 1) {

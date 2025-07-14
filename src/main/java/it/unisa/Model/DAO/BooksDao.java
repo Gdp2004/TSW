@@ -5,10 +5,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import it.unisa.Model.Books;
-import it.unisa.Model.DriverManagerConnectionPool;
+
 
 public class BooksDao {
+	
+	private static DataSource ds;
 
     public void insert(Books b) {
         String sql = """
@@ -17,7 +21,10 @@ public class BooksDao {
               price, stock_qty, image_path, category_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """;
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        
+        
+        
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, b.getIsbn());
@@ -54,7 +61,7 @@ public class BooksDao {
               FROM Book
              WHERE isbn = ?
             """;
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, isbn);
@@ -83,7 +90,7 @@ public class BooksDao {
               FROM Book
              LIMIT ?, ?
             """;
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, offset);
@@ -120,7 +127,7 @@ public class BooksDao {
               category_id = ?
              WHERE isbn = ?
             """;
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, b.getTitle());
@@ -153,7 +160,7 @@ public class BooksDao {
 
     public void delete(String isbn) {
         String sql = "DELETE FROM Book WHERE isbn = ?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, isbn);
             if (ps.executeUpdate() != 1) {
@@ -163,4 +170,44 @@ public class BooksDao {
             throw new RuntimeException(e);
         }
     }
+    
+    
+    /**
+     * Recupera i libri di una specifica categoria, con paginazione.
+     *
+     * @param categoryId l'id della categoria dei libri da cercare
+     * @param offset     l’offset per LIMIT
+     * @param limit      il numero massimo di righe da restituire
+     * @return lista di Books appartenenti alla categoria richiesta
+     */
+    public List<Books> findByCategory(int categoryId, int offset, int limit) {
+        String sql = """
+            SELECT isbn, title, author, image_path
+              FROM Book
+             WHERE category_id = ?
+             LIMIT ?, ?
+            """;
+        try (Connection con = ds.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, categoryId);
+            ps.setInt(2, offset);
+            ps.setInt(3, limit);
+
+            ResultSet rs = ps.executeQuery();
+            List<Books> list = new ArrayList<>();
+            while (rs.next()) {
+                Books b = new Books();
+                b.setIsbn("isbn");
+                b.setTitle(rs.getString("title"));
+                b.setAuthor(rs.getString("author"));
+                b.setImagePath(rs.getString("image_path"));
+                list.add(b);
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

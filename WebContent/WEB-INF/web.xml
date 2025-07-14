@@ -4,4 +4,17 @@
   <welcome-file-list>
     <welcome-file>Home.jsp</welcome-file>
   </welcome-file-list>
+  
+  <servlet>
+    <servlet-name>BestsellerCarousel</servlet-name>
+    <servlet-class>it.unisa.Controller.BestsellerCarousel</servlet-class>
+  </servlet>
+
+  <!-- Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>BestsellerCarousel</servlet-name>
+    <url-pattern>/carousel</url-pattern>
+  </servlet-mapping>
+
+  
 </web-app>

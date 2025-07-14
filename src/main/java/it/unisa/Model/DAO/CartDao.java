@@ -6,14 +6,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import it.unisa.Model.Cart;
-import it.unisa.Model.DriverManagerConnectionPool;
+
 
 public class CartDao {
+	
+	private DataSource ds;
 
     public List<Cart> doRetrieveAll(int offset, int limit) {
         String sql = "SELECT cart_id, user_id, created_at, last_update FROM Cart LIMIT ?, ?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, offset);
             ps.setInt(2, limit);
@@ -35,7 +39,7 @@ public class CartDao {
 
     public Cart doRetrieveById(String id) {
         String sql = "SELECT * FROM Cart WHERE cart_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
@@ -55,7 +59,7 @@ public class CartDao {
 
     public void doSave(Cart cart) {
         String sql = "INSERT INTO Cart(cart_id, user_id) VALUES(?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, cart.getCartId());
             if (cart.getUserId() != null) ps.setInt(2, cart.getUserId());
@@ -70,7 +74,7 @@ public class CartDao {
 
     public void doUpdate(Cart cart) {
         String sql = "UPDATE Cart SET user_id=? WHERE cart_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             if (cart.getUserId() != null) ps.setInt(1, cart.getUserId());
             else ps.setNull(1, Types.INTEGER);
@@ -85,7 +89,7 @@ public class CartDao {
 
     public void doDelete(String id) {
         String sql = "DELETE FROM Cart WHERE cart_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, id);
             if (ps.executeUpdate() != 1) {

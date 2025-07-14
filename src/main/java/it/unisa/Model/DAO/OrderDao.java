@@ -5,15 +5,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unisa.Model.DriverManagerConnectionPool;
+import javax.sql.DataSource;
+
+
 import it.unisa.Model.Order;
 
 public class OrderDao {
+	
+	private DataSource ds;
 
     public List<Order> doRetrieveAll(int offset, int limit) {
         String sql = "SELECT order_id, cart_id, user_id, status, total_amount, created_at "
                    + "FROM `Order` LIMIT ?, ?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, offset);
             ps.setInt(2, limit);
@@ -37,7 +41,7 @@ public class OrderDao {
 
     public Order doRetrieveById(int id) {
         String sql = "SELECT * FROM `Order` WHERE order_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -59,7 +63,7 @@ public class OrderDao {
 
     public void doSave(Order order) {
         String sql = "INSERT INTO `Order`(cart_id, user_id, status, total_amount) VALUES(?,?,?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, order.getCartId());
             if (order.getUserId() != null) ps.setInt(2, order.getUserId());
@@ -80,7 +84,7 @@ public class OrderDao {
 
     public void doUpdate(Order order) {
         String sql = "UPDATE `Order` SET status=?, total_amount=? WHERE order_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, order.getStatus());
             ps.setBigDecimal(2, order.getTotalAmount());
@@ -95,7 +99,7 @@ public class OrderDao {
 
     public void doDelete(int id) {
         String sql = "DELETE FROM `Order` WHERE order_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() != 1) {

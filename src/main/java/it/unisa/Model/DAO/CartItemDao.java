@@ -6,15 +6,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import it.unisa.Model.CartItem;
-import it.unisa.Model.DriverManagerConnectionPool;
+
 
 public class CartItemDao {
+	
+	private DataSource ds;
 
     public List<CartItem> doRetrieveByCartId(String cartId) {
         String sql = "SELECT cart_item_id, cart_id, isbn, quantity, unit_price, added_at "
                    + "FROM CartItem WHERE cart_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, cartId);
             ResultSet rs = ps.executeQuery();
@@ -37,7 +41,7 @@ public class CartItemDao {
 
     public CartItem doRetrieveById(int id) {
         String sql = "SELECT * FROM CartItem WHERE cart_item_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -59,7 +63,7 @@ public class CartItemDao {
 
     public void doSave(CartItem item) {
         String sql = "INSERT INTO CartItem(cart_id, isbn, quantity, unit_price) VALUES(?,?,?,?)";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, item.getCartId());
             ps.setString(2, item.getIsbn());
@@ -79,7 +83,7 @@ public class CartItemDao {
 
     public void doUpdate(CartItem item) {
         String sql = "UPDATE CartItem SET quantity=?, unit_price=? WHERE cart_item_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, item.getQuantity());
             ps.setBigDecimal(2, item.getUnitPrice());
@@ -94,7 +98,7 @@ public class CartItemDao {
 
     public void doDelete(int id) {
         String sql = "DELETE FROM CartItem WHERE cart_item_id=?";
-        try (Connection con = DriverManagerConnectionPool.getConnection();
+        try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() != 1) {
