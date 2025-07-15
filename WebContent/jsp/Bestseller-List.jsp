@@ -58,7 +58,7 @@
 
 <%
   DataSource ds = (DataSource)application.getAttribute("DataSource");
-  List<Books> all = new BooksDao(ds).findByCategory(1);
+  List<Books> all = new BooksDao(ds).findByCategory("1");
   // prendo fino a 12, ma mostro 5 per slide
   List<Books> books = (all.size() > 12) ? all.subList(0, 12) : all;
   final int perSlide = 5;

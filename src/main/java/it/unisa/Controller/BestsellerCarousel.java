@@ -35,7 +35,7 @@ public class BestsellerCarousel extends HttpServlet {
 
         // 2) Usa il DAO con il DataSource per caricare le immagini
         BooksDao dao = new BooksDao(ds);
-        List<Books> bestsellers = dao.findByCategory(1);
+        List<Books> bestsellers = dao.findByCategory("1");
        
 
         // 3) (Opzionale) Puoi salvarli in sessione se ti serve in JSP/JS

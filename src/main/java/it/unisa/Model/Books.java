@@ -1,7 +1,8 @@
-// File: src/main/java/it/unisa/Model/Libri.java
+// File: src/main/java/it/unisa/Model/Books.java
 package it.unisa.Model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Books {
     private String isbn;
@@ -11,13 +12,13 @@ public class Books {
     private BigDecimal price;
     private int stockQty;
     private String imagePath;    // percorso relativo: "covers/uuid.jpg"
-    private Integer categoryId;
+    private List<String> categoryIds; // lista dei category_id associati
 
     public Books() { }
 
     public Books(String isbn, String title, String author, String description,
-                 BigDecimal price, int stockQty,
-                 String imagePath, Integer categoryId) {
+                 BigDecimal price, int stockQty, String imagePath,
+                 List<String> categoryIds) {
         this.isbn        = isbn;
         this.title       = title;
         this.author      = author;
@@ -25,7 +26,7 @@ public class Books {
         this.price       = price;
         this.stockQty    = stockQty;
         this.imagePath   = imagePath;
-        this.categoryId  = categoryId;
+        this.categoryIds = categoryIds;
     }
 
     public String getIsbn() { return isbn; }
@@ -49,19 +50,19 @@ public class Books {
     public String getImagePath() { return imagePath; }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
-    public Integer getCategoryId() { return categoryId; }
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+    public List<String> getCategoryIds() { return categoryIds; }
+    public void setCategoryIds(List<String> categoryIds) { this.categoryIds = categoryIds; }
 
     @Override
     public String toString() {
-        return "Libri{" +
+        return "Books{" +
                "isbn='" + isbn + '\'' +
                ", title='" + title + '\'' +
                ", author='" + author + '\'' +
                ", price=" + price +
                ", stockQty=" + stockQty +
                ", imagePath='" + imagePath + '\'' +
-               ", categoryId=" + categoryId +
+               ", categoryIds=" + categoryIds +
                '}';
     }
 }

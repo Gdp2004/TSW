@@ -53,8 +53,43 @@
       transform: translateY(-50%);
       z-index: 10;
     }
-    .carousel-control-button.prev { left: -50px; }
-    .carousel-control-button.next { right: -50px; }
+    
+    .prev, .next{
+    
+    	color: black;
+    	
+    }
+    
+    a {
+      color: #2C6FA0;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #A6D4C9;
+    }
+    
+    .carousel-control-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border: 2px solid #A6D4C9;
+    color: #2C6FA0;
+    background-color: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .carousel-control-button.prev { left: -50px; }
+  .carousel-control-button.next { right: -50px; }
+
+  .carousel-control-button:hover {
+    background-color: #A6D4C9;
+    color: white;
+    border-color: #A6D4C9;
+  }
+	
   </style>
   
 </head>
@@ -62,7 +97,7 @@
 
 <%
   DataSource ds_comingsoon = (DataSource)application.getAttribute("DataSource");
-  List<Books> all_comingsoon = new BooksDao(ds_comingsoon).findByCategory(2);
+  List<Books> all_comingsoon = new BooksDao(ds_comingsoon).findByCategory("2");
   // prendo fino a 12, ma mostro 5 per slide
   List<Books> books_comingsoon = (all_comingsoon.size() > 12) ? all_comingsoon.subList(0, 12) : all_comingsoon;
   final int perSlide_comingsoon = 5;
@@ -141,6 +176,5 @@ window.addEventListener('load', () => {
 });
 </script>
 
-</script>
 </body>
 </html>

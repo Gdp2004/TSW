@@ -52,6 +52,10 @@
 	
 	<%@ include file="jsp/Nav-bar-2.jsp" %>
 	
+	<!-- NEWSLETTER + FOOTER -->
+	
+	<%@ include file="jsp/Footer.jsp" %>
+	
 
 </body>
 </html>
