@@ -10,46 +10,45 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
- 
 </head>
 <body>
 
 <%
-  DataSource ds_history = (DataSource)application.getAttribute("DataSource");
-  List<Books> all_history = new BooksDao(ds_history).findByCategory("12");
+  DataSource ds_art = (DataSource)application.getAttribute("DataSource");
+  List<Books> all_art = new BooksDao(ds_art).findByCategory("9");
   // prendo fino a 12, ma mostro 5 per slide
-  List<Books> books_history = (all_history.size() > 12) ? all_history.subList(0, 12) : all_history;
-  final int perSlide_history = 5;
+  List<Books> books_art = (all_art.size() > 12) ? all_art.subList(0, 12) : all_art;
+  final int perSlide_art = 5;
 %>
 
 <div class="container my-4 position-relative" id="bestseller-carousel">
   <div class="d-flex justify-content-between align-items-baseline mb-3">
-    <h2>Bestsellers History</h2>
-    <a href="<%=request.getContextPath()%>/bestsellers-sci-fi">See All</a>
+    <h2>Bestsellers Art</h2>
+    <a href="<%=request.getContextPath()%>/art">See All</a>
   </div>
 
-  <div id="multiCarouselHistory" class="carousel slide">
+  <div id="multiCarouselArt" class="carousel slide">
     <!-- Prev/Next visibili -->
     <button class="btn btn-outline-primary carousel-control-button prev"
-            type="button" data-bs-target="#multiCarouselHistory" data-bs-slide="prev">
+            type="button" data-bs-target="#multiCarouselArt" data-bs-slide="prev">
       ‹ Prev
     </button>
     <button class="btn btn-outline-primary carousel-control-button next"
-            type="button" data-bs-target="#multiCarouselHistory" data-bs-slide="next">
+            type="button" data-bs-target="#multiCarouselArt" data-bs-slide="next">
       Next ›
     </button>
 
     <div class="carousel-inner">
-      <% if (books_history != null && !books_history.isEmpty()) {
-           for (int i = 0; i < books_history.size(); i += perSlide_history) {
+      <% if (books_art != null && !books_art.isEmpty()) {
+           for (int i = 0; i < books_art.size(); i += perSlide_art) {
              String active = (i == 0) ? " active" : "";
       %>
       <div class="carousel-item<%=active%>">
         <div class="d-flex">
-          <% for (int j = 0; j < perSlide_history; j++) {
+          <% for (int j = 0; j < perSlide_art; j++) {
                int idx = i + j;
-               if (idx < books_history.size()) {
-                 Books b = books_history.get(idx);
+               if (idx < books_art.size()) {
+                 Books b = books_art.get(idx);
           %>
           <div class="book-col">
             <img

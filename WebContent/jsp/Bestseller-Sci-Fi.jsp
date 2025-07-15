@@ -24,7 +24,7 @@
 
 <div class="container my-4 position-relative" id="bestseller-carousel">
   <div class="d-flex justify-content-between align-items-baseline mb-3">
-    <h2>Bestsellers</h2>
+    <h2>Bestsellers Sci-Fi</h2>
     <a href="<%=request.getContextPath()%>/bestsellers-sci-fi">See All</a>
   </div>
 

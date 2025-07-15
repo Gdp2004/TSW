@@ -63,6 +63,10 @@
 	
 	<%@ include file="jsp/Bestseller-Narrative.jsp" %>
 	
+	<!-- BESTSELLER ART CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-Art.jsp" %>
+	
 	<!-- BESTSELLER TECHNOLOGY CAROUSEL -->
 	
 	<%@ include file="jsp/Bestseller-Technology.jsp" %>
