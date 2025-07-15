@@ -24,7 +24,7 @@
     <a href="Membership.jsp" class="nav-link">Membership</a>
     <a href="About Us.jsp" class="nav-link">About Us</a>
 
-    <a href="<%= (username != null) ? "Account.jsp" : "Login.jsp" %>" class="nav-link nav-link-account">
+    <a href="<%= (username != null) ? "jsp/Account.jsp" : "jsp/Login.jsp" %>" class="nav-link nav-link-account">
       <i class="fa-solid fa-user"></i>
       <span class="nav-link-text">
         <%= (username != null) ? "Ciao " + username : "Account" %>

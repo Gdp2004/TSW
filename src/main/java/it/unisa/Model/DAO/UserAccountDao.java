@@ -33,7 +33,7 @@ public class UserAccountDao {
 	}
 
     public List<UserAccount> doRetrieveAll(int offset, int limit) {
-        String sql = "SELECT user_id, email, password_hash, full_name, created_at, isAdmin FROM UserAccount LIMIT ?, ?";
+        String sql = "SELECT user_id, email, password_hash, name, surname, created_at, isAdmin FROM UserAccount LIMIT ?, ?";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, offset);
@@ -45,7 +45,8 @@ public class UserAccountDao {
                 u.setUserId(rs.getInt("user_id"));
                 u.setEmail(rs.getString("email"));
                 u.setPasswordHash(rs.getString("password_hash"));
-                u.setFullName(rs.getString("full_name"));
+                u.setName(rs.getString("name"));
+                u.setSurname(rs.getString("surname"));
                 u.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 u.setAdmin(rs.getBoolean("isAdmin"));
                 list.add(u);
@@ -67,7 +68,8 @@ public class UserAccountDao {
                 u.setUserId(id);
                 u.setEmail(rs.getString("email"));
                 u.setPasswordHash(rs.getString("password_hash"));
-                u.setFullName(rs.getString("full_name"));
+                u.setName(rs.getString("name"));
+                u.setSurname(rs.getString("surname"));
                 u.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 u.setAdmin(rs.getBoolean("isAdmin"));
                 return u;
@@ -79,13 +81,14 @@ public class UserAccountDao {
     }
 
     public void doSave(UserAccount user) {
-        String sql = "INSERT INTO UserAccount(email, password_hash, full_name, isAdmin) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO UserAccount(email, password_hash, name, surname, isAdmin) VALUES(?,?,?,?)";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
-            ps.setString(3, user.getFullName());
-            ps.setBoolean(4, user.getIsAdmin());
+            ps.setString(3, user.getName());
+            ps.setString(4, user.getSurname());
+            ps.setBoolean(5, user.getIsAdmin());
             if (ps.executeUpdate() != 1) {
                 throw new RuntimeException("INSERT error.");
             }
@@ -99,14 +102,15 @@ public class UserAccountDao {
     }
 
     public void doUpdate(UserAccount user) {
-        String sql = "UPDATE UserAccount SET email=?, password_hash=?, full_name=?, isAdmin=? WHERE user_id=?";
+        String sql = "UPDATE UserAccount SET email=?, password_hash=?, name=?, surname=? isAdmin=? WHERE user_id=?";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
-            ps.setString(3, user.getFullName());
-            ps.setBoolean(4, user.getIsAdmin());
-            ps.setInt(5, user.getUserId());
+            ps.setString(3, user.getName());
+            ps.setString(4, user.getSurname());
+            ps.setBoolean(5, user.getIsAdmin());
+            ps.setInt(6, user.getUserId());
             if (ps.executeUpdate() != 1) {
                 throw new RuntimeException("UPDATE error.");
             }
@@ -126,5 +130,30 @@ public class UserAccountDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public UserAccount findByEmailAndPassword(String email, String passwordHash) throws SQLException {
+        UserAccount utente = null;
+
+        String query = "SELECT * FROM UserAccount WHERE email = ? AND password = ?";
+        try (Connection con = ds.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, email);
+            ps.setString(2, passwordHash);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    utente = new UserAccount();
+                    utente.setEmail(rs.getString("email"));
+                    utente.setName((rs.getString("name")));
+                    utente.setSurname(rs.getString("surname"));
+                    utente.setAdmin(rs.getBoolean("isAdmin"));
+                    
+                }
+            }
+        }
+
+        return utente;
     }
 }
