@@ -41,11 +41,11 @@
 	
 	<!-- BESTSELLERS CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-List.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-List.jsp" %>
 	
 	<!-- COMING SOON CAROUSEL -->
 	
-	<%@ include file="jsp/ComingSoon-List.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/ComingSoon-List.jsp" %>
 	
 	<!-- 2 NAVIGATION BAR -->
 	
@@ -53,27 +53,27 @@
 	
 	<!-- BESTSELLER SCI-FI CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-Sci-Fi.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-Sci-Fi.jsp" %>
 	
 	<!-- BESTSELLER HISTORY CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-History.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-History.jsp" %>
 	
 	<!-- BESTSELLER NARRATIVE CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-Narrative.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-Narrative.jsp" %>
 	
 	<!-- BESTSELLER ART CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-Art.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-Art.jsp" %>
 	
 	<!-- BESTSELLER TECHNOLOGY CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-Technology.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-Technology.jsp" %>
 	
 	<!-- BESTSELLER KIDS CAROUSEL -->
 	
-	<%@ include file="jsp/Bestseller-Kids.jsp" %>
+	<%@ include file="jsp/BestSellersCarousels/Bestseller-Kids.jsp" %>
 	
 	<!-- NEWSLETTER + FOOTER -->
 	

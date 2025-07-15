@@ -99,14 +99,14 @@
 
 <nav>
   <ul class="nav-list">
-    <li><a href="#bestseller-carousel">Bestseller</a></li>
-    <li><a href="#comingsoon-carousel">Coming soon</a></li>
-    <li><a href="#">Art</a></li>
-    <li><a href="#">Sci-Fi</a></li>
-    <li><a href="#">History</a></li>
-    <li><a href="#">Narrative</a></li>
-    <li><a href="#">Technology</a></li>
-    <li><a href="#">Kids</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/bestsellers.jsp">Bestseller</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/comingsoon.jsp">Coming soon</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/art.jsp">Art</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/scifi.jsp">Sci-Fi</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/history.jsp">History</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/narrative.jsp">Narrative</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/technology.jsp">Technology</a></li>
+    <li><a href="<%= request.getContextPath()%>/jsp/kids.jsp">Kids</a></li>
   </ul>
 </nav>
 
