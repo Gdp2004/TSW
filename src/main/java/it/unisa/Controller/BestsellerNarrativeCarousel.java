@@ -13,11 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/comingsoon")
-public class ComingSoonCarousel extends HttpServlet {
+@WebServlet("/bestsellers-narrative")
+public class BestsellerNarrativeCarousel extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public ComingSoonCarousel() {
+    public BestsellerNarrativeCarousel() {
         super();
     }
 
@@ -25,7 +25,6 @@ public class ComingSoonCarousel extends HttpServlet {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
                          throws ServletException, IOException {
-
 
 
         // 1) Recupera il DataSource dal ServletContext
@@ -36,11 +35,11 @@ public class ComingSoonCarousel extends HttpServlet {
 
         // 2) Usa il DAO con il DataSource per caricare le immagini
         BooksDao dao = new BooksDao(ds);
-        List<Books> comingsoon = dao.findByCategory("2");
+        List<Books> bestsellers = dao.findByCategory("12");
 
 
         // 3) (Opzionale) Puoi salvarli in sessione se ti serve in JSP/JS
-        request.getSession().setAttribute("comingsoon", comingsoon);
+        request.getSession().setAttribute("narrative", bestsellers);
 
         // 4) Redirect alla pagina di provenienza per forzare il reload
         String referer = request.getContextPath() + "/Home.jsp";

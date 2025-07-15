@@ -39,7 +39,6 @@
 	
 	<%@ include file="jsp/Logo-Search-Cart.jsp" %>
 	
-	
 	<!-- BESTSELLERS CAROUSEL -->
 	
 	<%@ include file="jsp/Bestseller-List.jsp" %>
@@ -51,6 +50,26 @@
 	<!-- 2 NAVIGATION BAR -->
 	
 	<%@ include file="jsp/Nav-bar-2.jsp" %>
+	
+	<!-- BESTSELLER SCI-FI CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-Sci-Fi.jsp" %>
+	
+	<!-- BESTSELLER HISTORY CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-History.jsp" %>
+	
+	<!-- BESTSELLER NARRATIVE CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-Narrative.jsp" %>
+	
+	<!-- BESTSELLER TECHNOLOGY CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-Technology.jsp" %>
+	
+	<!-- BESTSELLER KIDS CAROUSEL -->
+	
+	<%@ include file="jsp/Bestseller-Kids.jsp" %>
 	
 	<!-- NEWSLETTER + FOOTER -->
 	
