@@ -8,17 +8,19 @@ public class UserAccount {
     private String passwordHash;
     private String fullName;
     private LocalDateTime createdAt;
+    private boolean isAdmin;
 
     public UserAccount() {
         // costruttore di default
     }
 
-    public UserAccount(int userId, String email, String passwordHash, String fullName, LocalDateTime createdAt) {
+    public UserAccount(int userId, String email, String passwordHash, String fullName, LocalDateTime createdAt, boolean isAdmin) {
         this.userId = userId;
         this.email = email;
         this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.createdAt = createdAt;
+        this.isAdmin = isAdmin;
     }
 
     public int getUserId() {
@@ -55,6 +57,9 @@ public class UserAccount {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    
+    public void setAdmin(boolean admin) { this.isAdmin = admin;}
+    public boolean getIsAdmin() { return isAdmin; }
 
     @Override
     public String toString() {
@@ -64,6 +69,7 @@ public class UserAccount {
                ", passwordHash='" + passwordHash + '\'' +
                ", fullName='" + fullName + '\'' +
                ", createdAt=" + createdAt +
+               ", isAdmin="   + isAdmin +
                '}';
     }
 }

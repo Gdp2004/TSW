@@ -33,7 +33,7 @@ public class UserAccountDao {
 	}
 
     public List<UserAccount> doRetrieveAll(int offset, int limit) {
-        String sql = "SELECT user_id, email, password_hash, full_name, created_at FROM UserAccount LIMIT ?, ?";
+        String sql = "SELECT user_id, email, password_hash, full_name, created_at, isAdmin FROM UserAccount LIMIT ?, ?";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, offset);
@@ -47,6 +47,7 @@ public class UserAccountDao {
                 u.setPasswordHash(rs.getString("password_hash"));
                 u.setFullName(rs.getString("full_name"));
                 u.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                u.setAdmin(rs.getBoolean("isAdmin"));
                 list.add(u);
             }
             return list;
@@ -68,6 +69,7 @@ public class UserAccountDao {
                 u.setPasswordHash(rs.getString("password_hash"));
                 u.setFullName(rs.getString("full_name"));
                 u.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                u.setAdmin(rs.getBoolean("isAdmin"));
                 return u;
             }
             return null;
@@ -77,12 +79,13 @@ public class UserAccountDao {
     }
 
     public void doSave(UserAccount user) {
-        String sql = "INSERT INTO UserAccount(email, password_hash, full_name) VALUES(?,?,?)";
+        String sql = "INSERT INTO UserAccount(email, password_hash, full_name, isAdmin) VALUES(?,?,?,?)";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
             ps.setString(3, user.getFullName());
+            ps.setBoolean(4, user.getIsAdmin());
             if (ps.executeUpdate() != 1) {
                 throw new RuntimeException("INSERT error.");
             }
@@ -96,13 +99,14 @@ public class UserAccountDao {
     }
 
     public void doUpdate(UserAccount user) {
-        String sql = "UPDATE UserAccount SET email=?, password_hash=?, full_name=? WHERE user_id=?";
+        String sql = "UPDATE UserAccount SET email=?, password_hash=?, full_name=?, isAdmin=? WHERE user_id=?";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
             ps.setString(3, user.getFullName());
-            ps.setInt(4, user.getUserId());
+            ps.setBoolean(4, user.getIsAdmin());
+            ps.setInt(5, user.getUserId());
             if (ps.executeUpdate() != 1) {
                 throw new RuntimeException("UPDATE error.");
             }
