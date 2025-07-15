@@ -64,7 +64,7 @@
   final int perSlide = 5;
 %>
 
-<div class="container my-4 position-relative">
+<div class="container my-4 position-relative" id="bestseller-carousel">
   <div class="d-flex justify-content-between align-items-baseline mb-3">
     <h2>Bestsellers</h2>
     <a href="<%=request.getContextPath()%>/bestsellers">See All</a>

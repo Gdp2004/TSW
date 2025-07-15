@@ -48,6 +48,10 @@
 	
 	<%@ include file="jsp/ComingSoon-List.jsp" %>
 	
+	<!-- 2 NAVIGATION BAR -->
+	
+	<%@ include file="jsp/Nav-bar-2.jsp" %>
+	
 
 </body>
 </html>

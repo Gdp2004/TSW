@@ -13,6 +13,8 @@
   
   <style>
     /* 5 items per slide: 100%/5 = 20% each */
+    
+    
     .book-col {
       flex: 0 0 20%;
       max-width: 20%;
@@ -66,7 +68,7 @@
   final int perSlide_comingsoon = 5;
 %>
 
-<div class="container my-4 position-relative">
+<div class="container my-4 position-relative" id="comingsoon-carousel">
   <div class="d-flex justify-content-between align-items-baseline mb-3">
     <h2>Coming Soon</h2>
     <a href="<%=request.getContextPath()%>/comingsoon">See All</a>

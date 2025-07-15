@@ -50,10 +50,15 @@
         </form>
         <% if (showMenu) { %>
           <ul id="dropdown-menu" class="dropdown-menu show">
-            <li><a href="#">Tutti i libri</a></li>
-            <li><a href="#">Bestseller</a></li>
-            <li><a href="#">Novità</a></li>
-            <li><a href="#">Offerte</a></li>
+            <li><a href="#">All books</a></li>
+            <li><a href="<%= request.getContextPath()%>/bestsellers">Bestseller</a></li>
+            <li><a href="#">Coming Soon</a></li>
+            <li><a href="#">Art</a></li>
+            <li><a href="#">Sci-Fi</a></li>
+            <li><a href="#">History</a></li>
+            <li><a href="#">Narrative</a></li>
+            <li><a href="#">Technology</a></li>
+            <li><a href="#">Kids</a></li>
           </ul>
         <% } %>
       </div>
