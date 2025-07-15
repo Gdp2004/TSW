@@ -157,23 +157,6 @@
 <!-- Bootstrap JS bundle -->
 <script
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-  
-  
-
-window.addEventListener('load', () => {
-  const images = document.querySelectorAll('.book-col img');
-  images.forEach(img => {
-    img.style.maxHeight = '300px';
-    img.style.width = 'auto';
-
-    // Se dopo aver fissato maxHeight l'immagine è ancora più larga del contenitore,
-    // restringi la larghezza e regola l'altezza di conseguenza
-    if (img.clientWidth > img.parentElement.clientWidth) {
-      img.style.width = '100%';
-      img.style.height = 'auto';
-    }
-  });
-});
 </script>
 
 </body>

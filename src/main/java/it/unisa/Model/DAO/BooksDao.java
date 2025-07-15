@@ -1,11 +1,15 @@
 package it.unisa.Model.DAO;
 
-import it.unisa.Model.Books;
-
-import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import it.unisa.Model.Books;
 
 public class BooksDao {
 
@@ -43,7 +47,7 @@ public class BooksDao {
                 ps.executeUpdate();
             }
 
-            if (b.getCategoryIds() != null) {
+            if (b.getCategoryIds() != null && !b.getCategoryIds().isEmpty()) {
                 try (PreparedStatement ps = con.prepareStatement(insertCategory)) {
                     for (String categoryId : b.getCategoryIds()) {
                         ps.setString(1, b.getIsbn());
@@ -79,7 +83,9 @@ public class BooksDao {
             psBook.setString(1, isbn);
             ResultSet rsBook = psBook.executeQuery();
 
-            if (!rsBook.next()) return null;
+            if (!rsBook.next()) {
+				return null;
+			}
 
             Books b = new Books();
             b.setIsbn(rsBook.getString("isbn"));

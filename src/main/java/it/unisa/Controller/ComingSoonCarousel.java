@@ -26,7 +26,7 @@ public class ComingSoonCarousel extends HttpServlet {
                          HttpServletResponse response)
                          throws ServletException, IOException {
 
-        
+
 
         // 1) Recupera il DataSource dal ServletContext
         DataSource ds = (DataSource) getServletContext().getAttribute("DataSource");
@@ -37,7 +37,7 @@ public class ComingSoonCarousel extends HttpServlet {
         // 2) Usa il DAO con il DataSource per caricare le immagini
         BooksDao dao = new BooksDao(ds);
         List<Books> comingsoon = dao.findByCategory("2");
-        
+
 
         // 3) (Opzionale) Puoi salvarli in sessione se ti serve in JSP/JS
         request.getSession().setAttribute("bestsellers", comingsoon);
