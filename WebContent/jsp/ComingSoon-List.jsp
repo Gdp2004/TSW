@@ -4,12 +4,13 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Bestsellers</title>
+  <title>Coming Soon</title>
   <!-- Bootstrap CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
+  
   <style>
     /* 5 items per slide: 100%/5 = 20% each */
     .book-col {
@@ -53,45 +54,46 @@
     .carousel-control-button.prev { left: -50px; }
     .carousel-control-button.next { right: -50px; }
   </style>
+  
 </head>
 <body>
 
 <%
-  DataSource ds = (DataSource)application.getAttribute("DataSource");
-  List<Books> all = new BooksDao(ds).findByCategory(1);
+  DataSource ds_comingsoon = (DataSource)application.getAttribute("DataSource");
+  List<Books> all_comingsoon = new BooksDao(ds_comingsoon).findByCategory(2);
   // prendo fino a 12, ma mostro 5 per slide
-  List<Books> books = (all.size() > 12) ? all.subList(0, 12) : all;
-  final int perSlide = 5;
+  List<Books> books_comingsoon = (all_comingsoon.size() > 12) ? all_comingsoon.subList(0, 12) : all_comingsoon;
+  final int perSlide_comingsoon = 5;
 %>
 
 <div class="container my-4 position-relative">
   <div class="d-flex justify-content-between align-items-baseline mb-3">
-    <h2>Bestsellers</h2>
-    <a href="<%=request.getContextPath()%>/bestsellers">See All</a>
+    <h2>Coming Soon</h2>
+    <a href="<%=request.getContextPath()%>/comingsoon">See All</a>
   </div>
 
-  <div id="multiCarousel" class="carousel slide">
+  <div id="multiCarousel-comingsoon" class="carousel slide">
     <!-- Prev/Next visibili -->
     <button class="btn btn-outline-primary carousel-control-button prev"
-            type="button" data-bs-target="#multiCarousel" data-bs-slide="prev">
+            type="button" data-bs-target="#multiCarousel-comingsoon" data-bs-slide="prev">
       ‹ Prev
     </button>
     <button class="btn btn-outline-primary carousel-control-button next"
-            type="button" data-bs-target="#multiCarousel" data-bs-slide="next">
+            type="button" data-bs-target="#multiCarousel-comingsoon" data-bs-slide="next">
       Next ›
     </button>
 
     <div class="carousel-inner">
-      <% if (books != null && !books.isEmpty()) {
-           for (int i = 0; i < books.size(); i += perSlide) {
+      <% if (books_comingsoon != null && !books_comingsoon.isEmpty()) {
+           for (int i = 0; i < books_comingsoon.size(); i += perSlide_comingsoon) {
              String active = (i == 0) ? " active" : "";
       %>
       <div class="carousel-item<%=active%>">
         <div class="d-flex">
-          <% for (int j = 0; j < perSlide; j++) {
+          <% for (int j = 0; j < perSlide_comingsoon; j++) {
                int idx = i + j;
-               if (idx < books.size()) {
-                 Books b = books.get(idx);
+               if (idx < books_comingsoon.size()) {
+                 Books b = books_comingsoon.get(idx);
           %>
           <div class="book-col">
             <img
@@ -108,7 +110,7 @@
       <%   }
          } else { %>
       <div class="carousel-item active text-center p-5">
-        Nessun bestseller disponibile
+        Nessun Coming soon disponibile
       </div>
       <% } %>
     </div>
@@ -119,6 +121,24 @@
 <script
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
   
+  
+
+window.addEventListener('load', () => {
+  const images = document.querySelectorAll('.book-col img');
+  images.forEach(img => {
+    img.style.maxHeight = '300px';
+    img.style.width = 'auto';
+
+    // Se dopo aver fissato maxHeight l'immagine è ancora più larga del contenitore,
+    // restringi la larghezza e regola l'altezza di conseguenza
+    if (img.clientWidth > img.parentElement.clientWidth) {
+      img.style.width = '100%';
+      img.style.height = 'auto';
+    }
+  });
+});
+</script>
+
 </script>
 </body>
 </html>

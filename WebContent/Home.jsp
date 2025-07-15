@@ -44,6 +44,10 @@
 	
 	<%@ include file="jsp/Bestseller-List.jsp" %>
 	
+	<!-- COMING SOON CAROUSEL -->
+	
+	<%@ include file="jsp/ComingSoon-List.jsp" %>
+	
 
 </body>
 </html>
