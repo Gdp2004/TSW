@@ -26,8 +26,9 @@
             <i class="fa-solid fa-user" style="flex-shrink:0;"></i>
             <span id="accountText" class="account-text" style="cursor:pointer;">Ciao, <%= username %></span>
 
-            <form id="logoutForm" action="<%= request.getContextPath() %>/LogoutServlet" method="post" style="display:none; margin:0;">
+            <form id="logoutForm" action="<%= request.getContextPath() %>/LogOutServlet" method="post" style="display:none; margin:0;">
                 <button type="submit" class="logout-button">Logout</button>
+               
             </form>
         </div>
     <% } else { %>
