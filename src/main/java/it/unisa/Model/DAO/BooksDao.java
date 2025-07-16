@@ -283,4 +283,54 @@ public class BooksDao {
             return ids;
         }
     }
+    
+    public List<Books> findRandom() {
+        String bookSql = """
+            SELECT isbn, title, author, description,
+                   price, stock_qty, image_path
+              FROM Book
+             ORDER BY RAND()
+            """;
+
+        String categorySql = """
+            SELECT category_id FROM BookCategory WHERE isbn = ?
+            """;
+
+        try (Connection con = ds.getConnection();
+             PreparedStatement psBook = con.prepareStatement(bookSql);
+             PreparedStatement psCat  = con.prepareStatement(categorySql);
+             ResultSet rs = psBook.executeQuery()) {
+
+            List<Books> list = new ArrayList<>();
+
+            while (rs.next()) {
+                Books b = new Books();
+                String isbn = rs.getString("isbn");
+
+                b.setIsbn(isbn);
+                b.setTitle(rs.getString("title"));
+                b.setAuthor(rs.getString("author"));
+                b.setDescription(rs.getString("description"));
+                b.setPrice(rs.getBigDecimal("price"));
+                b.setStockQty(rs.getInt("stock_qty"));
+                b.setImagePath(rs.getString("image_path"));
+
+                // Recupera le categorie associate
+                psCat.setString(1, isbn);
+                try (ResultSet rsCat = psCat.executeQuery()) {
+                    List<String> categoryIds = new ArrayList<>();
+                    while (rsCat.next()) {
+                        categoryIds.add(rsCat.getString("category_id"));
+                    }
+                    b.setCategoryIds(categoryIds);
+                }
+
+                list.add(b);
+            }
+
+            return list;
+        } catch (SQLException e) {
+            throw new RuntimeException("Database query error (findRandom)", e);
+        }
+    }
 }

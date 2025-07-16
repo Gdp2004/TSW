@@ -111,31 +111,7 @@
   color: var(--link-hover);
 }
 
-/* ----- MENU A TENDINA (DROPDOWN) ----- */
-.dropdown-content {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #fff;
-  min-width: 140px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  z-index: 1000;
-  border-radius: 8px;
-  padding: 8px 0;
-  white-space: nowrap;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.nav-link-account:hover .dropdown-content {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ----- LOGOUT BUTTON (SOLUZIONE DEFINITIVA) ----- */
+/* ----- LOGOUT BUTTON ----- */
 .logout-button {
   background: none;
   border: none;
@@ -146,29 +122,21 @@
   cursor: pointer;
   color: #333;
   font-weight: 500;
-  /* Rimuove completamente gli stili di focus */
   outline: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-focus-ring-color: transparent;
   box-shadow: none !important;
 }
 
-/* Rimuove lo stile di focus in tutti i browser */
+/* Rimuove il box di focus in tutti i browser */
 .logout-button:focus,
 .logout-button:focus-visible,
-.logout-button:active {
+.logout-button:active,
+.logout-button::-moz-focus-inner {
   outline: none !important;
   box-shadow: none !important;
   border: none !important;
 }
 
-/* Per Firefox */
-.logout-button::-moz-focus-inner {
-  border: 0;
-  padding: 0;
-}
-
-/* ----- ICONA NERA FISSA FUORI DAL BOTTONE ----- */
+/* Icona nera fuori dal button */
 #logoutForm i {
   position: absolute;
   left: -28px;
@@ -176,4 +144,50 @@
   transform: translateY(-50%);
   font-size: 1.4rem;
   color: #333;
+}
+
+/* ----- IMPOSTAZIONI IN NERO ----- */
+#settingsLink {
+  display: block;            /* si comporta come bottoni */
+  padding: 10px 16px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #000 !important;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Rimuove il box di focus anche per “Impostazioni” */
+#settingsLink:focus,
+#settingsLink:focus-visible,
+#settingsLink:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Mantieni nero al passaggio del mouse sul genitore */
+.nav-link-account:hover #settingsLink {
+  color: #000 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #nav-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .nav-link {
+    font-size: 1rem;
+    padding-bottom: 2px;
+  }
+  .logout-button,
+  #settingsLink {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
 }

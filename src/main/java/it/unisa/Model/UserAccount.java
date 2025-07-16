@@ -52,9 +52,9 @@ public class UserAccount {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getSurname() { return surname; }
-    
+
     public void setSurname(String surname) { this.surname = surname; }
 
     public LocalDateTime getCreatedAt() {
@@ -63,7 +63,7 @@ public class UserAccount {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    
+
     public void setAdmin(boolean admin) { this.isAdmin = admin;}
     public boolean getIsAdmin() { return isAdmin; }
 

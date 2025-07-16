@@ -50,7 +50,7 @@
         </form>
         <% if (showMenu) { %>
           <ul id="dropdown-menu" class="dropdown-menu show">
-            <li><a href="#">All books</a></li>
+            <li><a href="<%= request.getContextPath()%>/jsp/all.jsp">All books</a></li>
             <li><a href="<%= request.getContextPath()%>/jsp/bestsellers.jsp">Bestseller</a></li>
             <li><a href="<%= request.getContextPath()%>/jsp/comingsoon.jsp">Coming Soon</a></li>
             <li><a href="<%= request.getContextPath()%>/jsp/art.jsp">Art</a></li>

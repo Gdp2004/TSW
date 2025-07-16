@@ -131,7 +131,7 @@ public class UserAccountDao {
             throw new RuntimeException(e);
         }
     }
-    
+
     public UserAccount findByEmailAndPassword(String email, String passwordHash) throws SQLException {
         UserAccount utente = null;
 
@@ -149,7 +149,7 @@ public class UserAccountDao {
                     utente.setName((rs.getString("name")));
                     utente.setSurname(rs.getString("surname"));
                     utente.setAdmin(rs.getBoolean("isAdmin"));
-                    
+
                 }
             }
         }

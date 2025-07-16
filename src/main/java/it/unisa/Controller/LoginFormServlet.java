@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -12,7 +16,10 @@ import javax.sql.DataSource;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/LoginFormServlet")
 public class LoginFormServlet extends HttpServlet {
@@ -38,56 +45,77 @@ public class LoginFormServlet extends HttpServlet {
 
         String mode = request.getParameter("mode"); // "login" o "register"
         if (mode == null) {
-            // Nessun mode specificato: fallback a login
             response.sendRedirect(request.getContextPath() + "/jsp/LoginForm.jsp?mode=login");
             return;
         }
 
-        String email = request.getParameter("email");
+        String email    = request.getParameter("email");
         String password = request.getParameter("password");
         String hashedPassword = toHash(password);
 
         try (Connection conn = dataSource.getConnection()) {
             if ("login".equals(mode)) {
                 // LOGIN
-                String sql = "SELECT * FROM UserAccount WHERE email = ? AND password_hash = ?";
+                String sql = "SELECT name, surname, email, isAdmin "
+                           + "FROM UserAccount WHERE email = ? AND password_hash = ?";
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, email);
                     stmt.setString(2, hashedPassword);
 
-                    ResultSet rs = stmt.executeQuery();
-                    if (rs.next()) {
-                        session.setAttribute("logged", true);
-                        session.setAttribute("nome", rs.getString("name"));
-                        session.setAttribute("email", rs.getString("email"));
-                        session.setAttribute("utenteRegistrato", true);
-                        response.sendRedirect(request.getContextPath() + "/Home.jsp");
-                    } else {
-                        // Login fallito: mostra errore
-                        session.setAttribute("utenteRegistrato", true);
-                        response.sendRedirect(request.getContextPath() + "/jsp/LoginForm.jsp?mode=login&errore=login");
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            // Login ok: leggo isAdmin
+                            boolean isAdmin = rs.getBoolean("isAdmin");
+
+                            // setto attributi di sessione
+                            session.setAttribute("logged", true);
+                            session.setAttribute("nome", rs.getString("name"));
+                            session.setAttribute("email", rs.getString("email"));
+                            session.setAttribute("utenteRegistrato", true);
+
+                            // ruolo e flag isAdmin
+                            session.setAttribute("isAdmin", isAdmin);
+                            if (isAdmin) {
+                                session.setAttribute("ruolo", "admin");
+                            } else {
+                                session.setAttribute("ruolo", "user");
+                            }
+
+                            response.sendRedirect(request.getContextPath() + "/Home.jsp");
+                            return;
+                        }
                     }
                 }
+
+                // login fallito
+                session.setAttribute("utenteRegistrato", true);
+                response.sendRedirect(request.getContextPath()
+                        + "/jsp/LoginForm.jsp?mode=login&errore=login");
+                return;
+
             } else if ("register".equals(mode)) {
                 // REGISTRAZIONE
-                String nome = request.getParameter("nome");
+                String nome    = request.getParameter("nome");
                 String cognome = request.getParameter("cognome");
 
                 // Controlla se l'email esiste già
-                String checkSql = "SELECT * FROM UserAccount WHERE email = ?";
+                String checkSql = "SELECT 1 FROM UserAccount WHERE email = ?";
                 try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                     checkStmt.setString(1, email);
-                    ResultSet rs = checkStmt.executeQuery();
-                    if (rs.next()) {
-                        // Email già registrata
-                        session.setAttribute("utenteRegistrato", false);
-                        response.sendRedirect(request.getContextPath() + "/jsp/LoginForm.jsp?mode=register&errore=esiste");
-                        return;
+                    try (ResultSet rs = checkStmt.executeQuery()) {
+                        if (rs.next()) {
+                            session.setAttribute("utenteRegistrato", false);
+                            response.sendRedirect(request.getContextPath()
+                                    + "/jsp/LoginForm.jsp?mode=register&errore=esiste");
+                            return;
+                        }
                     }
                 }
 
-                // Inserisci nuovo utente
-                String insertSql = "INSERT INTO UserAccount (name, surname, email, password_hash, isAdmin) VALUES (?, ?, ?, ?, false)";
+                // Inserisci nuovo utente (isAdmin = false di default)
+                String insertSql = "INSERT INTO UserAccount "
+                                 + "(name, surname, email, password_hash, isAdmin) "
+                                 + "VALUES (?, ?, ?, ?, false)";
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
                     insertStmt.setString(1, nome);
                     insertStmt.setString(2, cognome);
@@ -96,16 +124,22 @@ public class LoginFormServlet extends HttpServlet {
                     insertStmt.executeUpdate();
                 }
 
-                // Registrazione riuscita: setta sessione e redirect home
+                // Registrazione riuscita
                 session.setAttribute("logged", true);
                 session.setAttribute("utenteRegistrato", true);
                 session.setAttribute("nome", nome);
                 session.setAttribute("email", email);
+                session.setAttribute("isAdmin", false);
+                session.setAttribute("ruolo", "user");
                 response.sendRedirect(request.getContextPath() + "/Home.jsp");
+                return;
+
             } else {
-                // Mode non valido, fallback
+                // Mode non valido
                 response.sendRedirect(request.getContextPath() + "/jsp/LoginForm.jsp?mode=login");
+                return;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/error.jsp");
@@ -113,7 +147,6 @@ public class LoginFormServlet extends HttpServlet {
     }
 
     private String toHash(String password) {
-        String hashString = null;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-512");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -121,10 +154,9 @@ public class LoginFormServlet extends HttpServlet {
             for (byte b : hash) {
                 sb.append(String.format("%02x", b));
             }
-            hashString = sb.toString();
+            return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("Errore hashing password: " + e);
+            throw new RuntimeException("Errore hashing password", e);
         }
-        return hashString;
     }
 }
