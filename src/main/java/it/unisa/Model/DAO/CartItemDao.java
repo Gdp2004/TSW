@@ -1,39 +1,30 @@
 package it.unisa.Model.DAO;
 
-
-
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import it.unisa.Model.CartItem;
 
-
 public class CartItemDao {
 
-	private static DataSource ds;
+    private final DataSource ds;
 
-	static {
-		try {
-			Context initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    public CartItemDao(DataSource ds) {
+        this.ds = ds;
+    }
 
-			ds = (DataSource) envCtx.lookup("jdbc/Database");
-
-		} catch (NamingException e) {
-			System.out.println("Error:" + e.getMessage());
-		}
-	}
-
+    /**
+     * Recupera gli articoli nel carrello per un utente dato l'ID del carrello.
+     * @param cartId L'ID del carrello.
+     * @return Una lista di articoli nel carrello.
+     */
     public List<CartItem> doRetrieveByCartId(String cartId) {
         String sql = "SELECT cart_item_id, cart_id, isbn, quantity, unit_price, added_at "
                    + "FROM CartItem WHERE cart_id=?";
@@ -58,73 +49,88 @@ public class CartItemDao {
         }
     }
 
-    public CartItem doRetrieveById(int id) {
-        String sql = "SELECT * FROM CartItem WHERE cart_item_id=?";
+    /**
+     * Aggiunge un articolo al carrello. Se l'articolo esiste già, aggiorna la quantità.
+     * @param cartId L'ID del carrello.
+     * @param isbn L'ISBN del libro.
+     * @param unitPrice Il prezzo unitario dell'articolo.
+     */
+    public void addItemToCart(String cartId, String isbn, BigDecimal unitPrice) {
+        String sql = "INSERT INTO CartItem (cart_id, isbn, quantity, unit_price) " +
+                     "VALUES (?, ?, 1, ?) " +
+                     "ON DUPLICATE KEY UPDATE quantity = quantity + 1";
+
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                CartItem ci = new CartItem();
-                ci.setCartItemId(id);
-                ci.setCartId(rs.getString("cart_id"));
-                ci.setIsbn(rs.getString("isbn"));
-                ci.setQuantity(rs.getInt("quantity"));
-                ci.setUnitPrice(rs.getBigDecimal("unit_price"));
-                ci.setAddedAt(rs.getTimestamp("added_at").toLocalDateTime());
-                return ci;
-            }
-            return null;
+            ps.setString(1, cartId);
+            ps.setString(2, isbn);
+            ps.setBigDecimal(3, unitPrice);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante l'aggiunta dell'articolo al carrello", e);
         }
     }
 
-    public void doSave(CartItem item) {
-        String sql = "INSERT INTO CartItem(cart_id, isbn, quantity, unit_price) VALUES(?,?,?,?)";
+    /**
+     * Rimuove un articolo dal carrello dato l'ID del carrello e l'ISBN del libro.
+     * @param cartId L'ID del carrello.
+     * @param isbn L'ISBN del libro.
+     */
+    public void removeItemFromCart(String cartId, String isbn) {
+        String sql = "DELETE FROM CartItem WHERE cart_id = ? AND isbn = ?";
+
         try (Connection con = ds.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, item.getCartId());
-            ps.setString(2, item.getIsbn());
-            ps.setInt(3, item.getQuantity());
-            ps.setBigDecimal(4, item.getUnitPrice());
-            if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("INSERT error.");
-            }
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                item.setCartItemId(rs.getInt(1));
-            }
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, cartId);
+            ps.setString(2, isbn);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante la rimozione dell'articolo dal carrello", e);
         }
     }
 
-    public void doUpdate(CartItem item) {
-        String sql = "UPDATE CartItem SET quantity=?, unit_price=? WHERE cart_item_id=?";
+    /**
+     * Svuota il carrello dell'utente dato l'ID del carrello.
+     * @param cartId L'ID del carrello.
+     */
+    public void clearCart(String cartId) {
+        String sql = "DELETE FROM CartItem WHERE cart_id = ?";
+
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, item.getQuantity());
-            ps.setBigDecimal(2, item.getUnitPrice());
-            ps.setInt(3, item.getCartItemId());
-            if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("UPDATE error.");
-            }
+            ps.setString(1, cartId);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante la pulizia del carrello", e);
         }
     }
 
-    public void doDelete(int id) {
-        String sql = "DELETE FROM CartItem WHERE cart_item_id=?";
+    /**
+     * Salva gli articoli nel carrello nel database.
+     * @param cartId L'ID del carrello.
+     * @param cartItems Una lista di ISBN degli articoli nel carrello.
+     */
+    public void saveCart(String cartId, List<String> cartItems, BigDecimal unitPrice) {
+        String sql = "INSERT INTO CartItem (cart_id, isbn, quantity, unit_price) VALUES (?, ?, 1, ?) " +
+                     "ON DUPLICATE KEY UPDATE quantity = quantity + 1";
+
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            if (ps.executeUpdate() != 1) {
-                throw new RuntimeException("DELETE error.");
+
+            for (String isbn : cartItems) {
+                ps.setString(1, cartId);
+                ps.setString(2, isbn);
+                ps.setBigDecimal(3, unitPrice);
+                ps.addBatch(); // Aggiungi l'operazione al batch
             }
+
+            ps.executeBatch(); // Esegui tutte le operazioni in una volta
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante il salvataggio del carrello.", e);
         }
     }
 }

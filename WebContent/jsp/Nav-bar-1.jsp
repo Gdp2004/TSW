@@ -56,10 +56,7 @@
     </a>
   <% } %>
 
-  <a href="Wishlist.jsp" class="nav-link nav-link-wishlist">
-    <i class="fa-regular fa-heart"></i>
-    <span class="nav-link-text">Wishlist</span>
-  </a>
+  
 </nav>
 
 <script>

@@ -124,4 +124,30 @@ public class CartDao {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Salva gli articoli nel carrello nel database.
+     * @param cartId L'ID del carrello
+     * @param cartItems Una lista di ISBN degli articoli nel carrello
+     */
+    public void saveCart(String cartId, List<String> cartItems) {
+        String sql = "INSERT INTO CartItem (cart_id, isbn, quantity) VALUES (?, ?, 1) " +
+                     "ON DUPLICATE KEY UPDATE quantity = quantity + 1";
+
+        try (Connection con = ds.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            for (String isbn : cartItems) {
+                ps.setString(1, cartId);
+                ps.setString(2, isbn);
+                ps.addBatch(); // Aggiungi l'operazione al batch
+            }
+
+            ps.executeBatch(); // Esegui tutte le operazioni in una volta
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante il salvataggio del carrello.", e);
+        }
+    }
 }

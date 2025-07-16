@@ -1,78 +1,88 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java"
+         contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"
+         import="javax.naming.Context, javax.naming.InitialContext, javax.sql.DataSource,
+                 it.unisa.Model.DAO.CartDao, it.unisa.Model.CartItem" %>
+
 <%
-  // 1) Gestione carrello
-  Integer cartSize = (Integer) session.getAttribute("cartSize");
-  if (cartSize == null) {
-    cartSize = 0;
-    session.setAttribute("cartSize", cartSize);
-  }
+    // Gestione carrello in sessione (recupero la dimensione del carrello)
+    Integer cartSize = (Integer) session.getAttribute("cartSize");
+    if (cartSize == null) {
+        cartSize = 0;  // Se non esiste, inizializza a zero
+        session.setAttribute("cartSize", cartSize);
+    }
 
-  // 2) Lettura parametro GET per mostrare/nascondere il menu
-  String showParam = request.getParameter("showMenu");
-  boolean showMenu = (showParam != null) && Boolean.parseBoolean(showParam);
-
-  // 3) Calcolo valore da inviare al prossimo click (toggle)
-  boolean nextShow = !showMenu;
+    // Recupero la variabile per il toggle del menu (mostrare o nascondere)
+    String showParam = request.getParameter("showMenu");
+    boolean showMenu = (showParam != null) && Boolean.parseBoolean(showParam);
+    boolean nextShow = !showMenu;  // Calcolo il prossimo stato del menu
 %>
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UniBook</title>
 
-  <!-- Font Awesome per l’icona -->
+  <!-- FontAwesome per le icone -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <!-- Il tuo CSS -->
-  <link rel="stylesheet" href="styles/Logo-Search-Cart.css">
 
-  <!-- JS con defer (al momento non serve per il dropdown) -->
-  <script src="scripts/Logo-Search-Bar.js" defer></script>
-  <title>UniBook</title>
+  <!-- CSS personalizzati -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/Logo-Search-Cart.css"/>
+
+  <!-- JavaScript -->
+  <script src="${pageContext.request.contextPath}/scripts/Logo-Search-Bar.js" defer></script>
 </head>
 <body>
 
   <div id="header-wrapper">
+    <!-- Logo -->
     <div id="logo-unibook">
-      <img src="images/UniBook_Text_Logo.svg" alt="Logo UniBook">
+      <a href="${pageContext.request.contextPath}/Home.jsp">
+        <img src="${pageContext.request.contextPath}/images/UniBook_Text_Logo.svg" alt="Logo UniBook">
+      </a>
     </div>
 
     <div id="bar-row">
-      <!-- WRAPPER DEL DROPDOWN -->
+      <!-- Menu a tendina -->
       <div class="dropdown">
-        <form method="get" action="" style="display:inline;margin:0;">
+        <form method="get" action="" style="display:inline; margin:0;">
           <input type="hidden" name="showMenu" value="<%= nextShow %>">
-          <button id="dropdown-button"
-                  type="submit"
-                  class="<%= showMenu ? "active" : "" %>">
+          <button id="dropdown-button" type="submit" class="<%= showMenu ? "active" : "" %>">
             All <i class="fa-solid fa-chevron-down"></i>
           </button>
         </form>
         <% if (showMenu) { %>
           <ul id="dropdown-menu" class="dropdown-menu show">
-            <li><a href="<%= request.getContextPath()%>/jsp/all.jsp">All books</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/bestsellers.jsp">Bestseller</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/comingsoon.jsp">Coming Soon</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/art.jsp">Art</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/scifi.jsp">Sci-Fi</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/history.jsp">History</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/narrtive.jsp">Narrative</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/technology.jsp">Technology</a></li>
-            <li><a href="<%= request.getContextPath()%>/jsp/kids.jsp">Kids</a></li>
+            <li><a href="${pageContext.request.contextPath}/all.jsp">All books</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/bestsellers.jsp">Bestseller</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/comingsoon.jsp">Coming Soon</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/art.jsp">Art</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/scifi.jsp">Sci-Fi</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/history.jsp">History</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/narrative.jsp">Narrative</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/technology.jsp">Technology</a></li>
+            <li><a href="${pageContext.request.contextPath}/jsp/kids.jsp">Kids</a></li>
           </ul>
         <% } %>
       </div>
 
+      <!-- Form di ricerca -->
       <form method="get" action="" class="search-form">
-        <input type="text" id="search-input" name="search-query"
+        <input type="text"
+               id="search-input"
+               name="search-query"
                placeholder="Search by Title, Author, Keyword or ISBN">
         <button type="submit" class="search-btn">
           <i class="fas fa-search"></i>
         </button>
       </form>
 
+      <!-- Icona carrello con contatore -->
       <div id="cart">
-        <a href="Cart.jsp" class="cart-link">
+        <a href="${pageContext.request.contextPath}/Cart.jsp" class="cart-link">
           <i class="fa-solid fa-cart-shopping"></i>
           <span class="cart-count"><%= cartSize %></span>
         </a>
@@ -80,11 +90,10 @@
     </div>
   </div>
 
+  <!-- Immagine bestseller -->
   <div id="Bestseller-Culturia">
     <a href="#">
-      <img src="images/Bestseller-Culturia.png"
-           alt="Libro Culturia"
-           width="100%">
+      <img src="${pageContext.request.contextPath}/images/Bestseller-Culturia.png" alt="Libro Culturia" style="width:100%; display:block;"/>
     </a>
   </div>
 
