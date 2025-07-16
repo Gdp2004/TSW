@@ -1,14 +1,15 @@
 @charset "UTF-8";
 
 :root {
-  --nav-bg:     rgb(255, 255, 255);
-  --link-color: #708090;
-  --link-hover: #2C6FA0;
-  --underline:  #A6D4C9;
+  --nav-bg:       rgb(255, 255, 255);
+  --link-color:   #708090;
+  --link-hover:   #2C6FA0;
+  --underline:    #A6D4C9;
 }
 
-
+/* ----- NAV BAR BASE ----- */
 #nav-bar {
+  position: relative;
   display: flex;
   align-items: center;
   background-color: var(--nav-bg);
@@ -17,20 +18,19 @@
   box-sizing: border-box;
 }
 
-
+/* ----- LINK GENERICI ----- */
 .nav-link {
   position: relative;
   color: var(--link-color);
   text-decoration: none;
   font-weight: 600;
   font-size: 1.2rem;
-  padding-bottom: 4px; 
+  padding-bottom: 4px;
   display: flex;
   align-items: center;
-  gap: 8px; 
+  gap: 8px;
   transition: color 0.2s;
 }
-
 
 .nav-link::after {
   content: "";
@@ -43,17 +43,17 @@
   transition: width 0.3s ease;
 }
 
-
 .nav-link:hover,
 .nav-link:focus {
   color: var(--link-hover);
 }
+
 .nav-link:hover::after,
 .nav-link:focus::after {
   width: 100%;
 }
 
-
+/* ----- ICONE ----- */
 .nav-link i {
   font-size: 1.4rem;
   margin-right: 10px;
@@ -61,23 +61,31 @@
   transition: color 0.3s;
 }
 
-
+/* ----- ACCOUNT & WISHLIST SPECIALI ----- */
 .nav-link-account::after,
 .nav-link-wishlist::after {
   content: none;
 }
 
+.nav-link-account {
+  position: relative;
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
 
-.nav-link-account .nav-link-text,
-.nav-link-wishlist .nav-link-text {
+.nav-link-wishlist {
+  margin-right: 0;
+}
+
+.account-text,
+.nav-link-text {
   position: relative;
   padding-bottom: 4px;
   transition: color 0.3s;
 }
 
-
-.nav-link-account .nav-link-text::after,
-.nav-link-wishlist .nav-link-text::after {
+.account-text::after,
+.nav-link-text::after {
   content: "";
   position: absolute;
   left: 0;
@@ -88,37 +96,84 @@
   transition: width 0.3s ease;
 }
 
-
-.nav-link-account:hover .nav-link-text,
-.nav-link-account:focus .nav-link-text,
-.nav-link-wishlist:hover .nav-link-text,
-.nav-link-wishlist:focus .nav-link-text {
-  color: var(--link-hover);
-}
-.nav-link-account:hover .nav-link-text::after,
-.nav-link-account:focus .nav-link-text::after,
-.nav-link-wishlist:hover .nav-link-text::after,
-.nav-link-wishlist:focus .nav-link-text::after {
+.nav-link-account:hover .account-text::after,
+.nav-link-wishlist:hover .nav-link-text::after {
   width: 100%;
 }
 
-.nav-link-account:hover i,
-.nav-link-account:focus i,
-.nav-link-wishlist:hover i,
-.nav-link-wishlist:focus i {
+.nav-link-account:hover .account-text,
+.nav-link-wishlist:hover .nav-link-text {
   color: var(--link-hover);
 }
 
-.nav-link-account,
-.nav-link-wishlist {
-  order: 1;
+.nav-link-account:hover i,
+.nav-link-wishlist:hover i {
+  color: var(--link-hover);
 }
 
-.nav-link-account {
-  margin-left: auto;
-  margin-right: 0.5rem;
+/* ----- MENU A TENDINA (DROPDOWN) ----- */
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  min-width: 140px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  border-radius: 8px;
+  padding: 8px 0;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-.nav-link-wishlist {
-  margin-right: 0;
+.nav-link-account:hover .dropdown-content {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ----- LOGOUT BUTTON (SOLUZIONE DEFINITIVA) ----- */
+.logout-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+  /* Rimuove completamente gli stili di focus */
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-focus-ring-color: transparent;
+  box-shadow: none !important;
+}
+
+/* Rimuove lo stile di focus in tutti i browser */
+.logout-button:focus,
+.logout-button:focus-visible,
+.logout-button:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Per Firefox */
+.logout-button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/* ----- ICONA NERA FISSA FUORI DAL BOTTONE ----- */
+#logoutForm i {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+  color: #333;
 }
