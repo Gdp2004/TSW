@@ -51,12 +51,14 @@
                  Books b = books_art.get(idx);
           %>
           <div class="book-col">
-            <img
+            <a href="<%= request.getContextPath()%>/bookdetailservlet?isbn=<%= b.getIsbn()%>">
+            	<img
               src="<%=request.getContextPath()%>/images/Covers/<%=b.getImagePath()%>"
               alt="<%=b.getTitle()%>"
-            />
-            <h6 title="<%=b.getTitle()%>"><%=b.getTitle()%></h6>
-            <small><%=b.getAuthor()%></small>
+            	/>
+          	</a>
+          <h6 title="<%=b.getTitle()%>"><%=b.getTitle()%></h6>
+            	<small><%=b.getAuthor()%></small>
           </div>
           <%   }
              } %>

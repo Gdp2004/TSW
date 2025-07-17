@@ -9,7 +9,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Books</title>
+  <title>History Books</title>
   <!-- FontAwesome per le icone -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -106,14 +106,14 @@
   }
   // 3) Carica i libri casuali in sessione (una sola volta)
   @SuppressWarnings("unchecked")
-  List<Books> randomBooks = (List<Books>) session.getAttribute("randomBooks");
-  if (randomBooks == null) {
+  List<Books> historyBooks = (List<Books>) session.getAttribute("historyBooks");
+  if (historyBooks == null) {
     Context initCtx = new InitialContext();
     Context envCtx  = (Context) initCtx.lookup("java:comp/env");
     DataSource ds   = (DataSource) envCtx.lookup("jdbc/Database");
     BooksDao dao    = new BooksDao(ds);
-    randomBooks     = dao.findRandom();
-    session.setAttribute("randomBooks", randomBooks);
+    historyBooks     = dao.findByCategory("5");
+    session.setAttribute("historyBooks", historyBooks);
   }
 %>
 
@@ -121,12 +121,12 @@
 <%@ include file="/jsp/Logo-Search-Cart.jsp" %>
 <%@ include file="/jsp/Culturia.jsp" %>
 
-<h1>All Books</h1>
+<h1>All History Books</h1>
 
 <div class="books-grid">
   <%
-    if (randomBooks != null && !randomBooks.isEmpty()) {
-      for (Books b : randomBooks) {
+    if (historyBooks != null && !historyBooks.isEmpty()) {
+      for (Books b : historyBooks) {
   %>
     <div class="book-card">
       <div class="image-wrapper">

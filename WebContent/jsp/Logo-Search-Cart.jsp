@@ -57,14 +57,14 @@
         <% if (showMenu) { %>
           <ul id="dropdown-menu" class="dropdown-menu show">
             <li><a href="${pageContext.request.contextPath}/all.jsp">All books</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/bestsellers.jsp">Bestseller</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/comingsoon.jsp">Coming Soon</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/art.jsp">Art</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/scifi.jsp">Sci-Fi</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/history.jsp">History</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/narrative.jsp">Narrative</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/technology.jsp">Technology</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/kids.jsp">Kids</a></li>
+            <li><a href="${pageContext.request.contextPath}/bestseller.jsp">Bestseller</a></li>
+            <li><a href="${pageContext.request.contextPath}/comingsoon.jsp">Coming Soon</a></li>
+            <li><a href="${pageContext.request.contextPath}/art.jsp">Art</a></li>
+            <li><a href="${pageContext.request.contextPath}/scifi.jsp">Sci-Fi</a></li>
+            <li><a href="${pageContext.request.contextPath}/history.jsp">History</a></li>
+            <li><a href="${pageContext.request.contextPath}/narrative.jsp">Narrative</a></li>
+            <li><a href="${pageContext.request.contextPath}/technology.jsp">Technology</a></li>
+            <li><a href="${pageContext.request.contextPath}/kids.jsp">Kids</a></li>
           </ul>
         <% } %>
       </div>
