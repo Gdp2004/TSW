@@ -90,12 +90,8 @@
     </div>
   </div>
 
-  <!-- Immagine bestseller -->
-  <div id="Bestseller-Culturia">
-    <a href="#">
-      <img src="${pageContext.request.contextPath}/images/Bestseller-Culturia.png" alt="Libro Culturia" style="width:100%; display:block;"/>
-    </a>
-  </div>
+  
+  
 
 </body>
 </html>

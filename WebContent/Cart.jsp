@@ -1,222 +1,147 @@
 <%@ page language="java"
          contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"
-         import="java.util.List, java.util.Map, java.util.HashMap, it.unisa.Model.Books, it.unisa.Model.DAO.BooksDao, javax.naming.Context, javax.naming.InitialContext, javax.sql.DataSource" %>
-
+         import="java.util.List, java.util.Map, java.util.HashMap,
+                 javax.naming.Context, javax.naming.InitialContext, javax.sql.DataSource,
+                 it.unisa.Model.Books, it.unisa.Model.DAO.BooksDao" %>
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Carrello</title>
-  <link rel="stylesheet" href="styles/Cart.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  
+
+  <!-- FontAwesome per le icone -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- CSS esterni -->
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/styles/Nav-bar-1.css"/>
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/styles/Logo-Search-Cart.css"/>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/Cart.css"/>
 
   <style>
-    /* Styling base per la tabella */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    /* Stile per la riga del totale */
-    .total-row {
-      font-size: 1.1rem;
-      font-weight: bold;
-      background-color: #f9f9f9;
-    }
-
-    /* Stile per il carrello vuoto */
-    .empty-cart {
-      font-size: 1.5rem;
-      color: #555;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    /* Bottone Checkout */
-    .checkout-button {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: #2C6FA0;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      cursor: pointer;
+    /* Freccia per tornare alla home */
+    .back-to-home {
+      font-size: 2rem;
+      color: #2C6FA0;
       text-decoration: none;
-    }
-
-    .checkout-button:hover {
-      background-color: #1a4b6e;
-    }
-
-    /* Layout del carrello */
-    .cart-container {
-      padding: 20px;
-      margin: 0 auto;
-      width: 80%;
-    }
-
-    .cart-item-image {
-      width: 50px;
-      height: auto;
-      border-radius: 5px;
-    }
-
-    .cart-item-details {
-      display: flex;
-      justify-content: space-between;
+      margin: 20px;
+      display: inline-flex;
       align-items: center;
     }
-
+    .back-to-home i {
+      margin-right: 8px;
+    }
+    /* Tabella */
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd; padding: 10px; text-align: left;
+    }
+    th { background: #f2f2f2; }
+    /* Righe e sommario */
+    .empty-cart { text-align: center; font-size: 1.5rem; color: #555; margin-top: 40px; }
+    .cart-container { width: 80%; margin: 0 auto; padding: 20px; }
+    .cart-item-image { width: 50px; border-radius: 4px; }
     .cart-summary {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.2rem;
-      margin-top: 20px;
-      font-weight: bold;
+      display: flex; justify-content: space-between; font-size: 1.2rem;
+      font-weight: bold; margin-top: 20px;
     }
-
-    /* Aggiungere logo */
-    #logo-unibook {
-      text-align: center;
-      margin: 20px 0;
+    .checkout-button {
+      background: #2C6FA0; color: #fff; border: none; padding: 12px 24px;
+      border-radius: 4px; cursor: pointer; font-size: 1rem;
     }
-
-    #logo-unibook img {
-      width: 150px; /* Modifica la larghezza a tua preferenza */
-      height: auto;
-    }
-
-    /* Stile per la freccia per tornare alla home */
-    .back-to-home {
-    font-size: 2rem;  /* Freccia grande */
-    color: #2C6FA0;
-    text-decoration: none;
-    margin-left: 30px;
-    display: inline-flex; /* Usa flexbox per allineare gli elementi sulla stessa riga */
-    align-items: center;  /* Allinea gli elementi verticalmente */
-}
-
-.back-to-home i {
-    margin-right: 10px; /* Distanza tra la freccia e il testo */
-}
-
-.back-to-home:hover {
-    color: #1a4b6e;
-}
-
+    .checkout-button:hover { background: #1a4b6e; }
   </style>
 </head>
 <body>
 
-	<%@ include file="/jsp/Nav-bar-1.jsp" %>
+  <%-- Navbar e logo --%>
+  <%@ include file="/jsp/Nav-bar-1.jsp" %>
+  <%@ include file="/jsp/Logo-Search-Cart.jsp" %>
 
-  <!-- Freccia per tornare alla home -->
-  <a href="<%= request.getContextPath() %>/Home.jsp" class="back-to-home">
+  <%-- Freccia per tornare alla home --%>
+  <a href="${pageContext.request.contextPath}/Home.jsp" class="back-to-home">
     <i class="fa-solid fa-arrow-left"></i><span>Home</span>
   </a>
 
 <%
-    // Recupero l'email dell'utente dalla sessione
-    String email = (String) session.getAttribute("email");
+  // Inizializza il carrello in sessione se non esiste
+  @SuppressWarnings("unchecked")
+  Map<String,Integer> cart = (Map<String,Integer>) session.getAttribute("cart");
+  if (cart == null) {
+    cart = new HashMap<>();
+    session.setAttribute("cart", cart);
+    session.setAttribute("cartSize", 0);
+  }
 
-    // Connessione al database tramite DataSource (JNDI)
-    Context initCtx = new InitialContext();
-    Context envCtx  = (Context) initCtx.lookup("java:comp/env");
-    DataSource ds   = (DataSource) envCtx.lookup("jdbc/Database");
+  // Connessione DB e DAO per i dati dei libri
+  Context initCtx = new InitialContext();
+  Context envCtx  = (Context) initCtx.lookup("java:comp/env");
+  DataSource ds   = (DataSource) envCtx.lookup("jdbc/Database");
+  BooksDao dao    = new BooksDao(ds);
 
-    // Verifico se l'utente è loggato
-    if (email != null) {
-        // Crea il DAO per il carrello
-        BooksDao b = new BooksDao(ds);
-        
-        // Recupero gli articoli nel carrello dalla sessione (carrello come Map)
-        @SuppressWarnings("unchecked")
-        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-
-        // Se il carrello è vuoto
-        if (cart == null || cart.isEmpty()) {
+  // Se il carrello è vuoto
+  if (cart.isEmpty()) {
 %>
-            <div class="empty-cart">Il tuo carrello è vuoto.</div>
+    <div class="empty-cart">Il tuo carrello è vuoto.</div>
 <%
-        } else {
+  } else {
+    double totalPrice = 0;
 %>
-            <div class="cart-container">
-                <h1>Il tuo Carrello</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Immagine</th>
-                            <th>Titolo</th>
-                            <th>Quantità</th>
-                            <th>Prezzo</th>
-                            <th>Totale</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%
-                            double totalPrice = 0.0;
-                            // Iteriamo attraverso gli articoli nel carrello
-                            for (Map.Entry<String, Integer> entry : cart.entrySet()) {
-                                String isbn = entry.getKey();
-                                int quantity = entry.getValue();
-
-                                // Recupero il libro tramite ISBN
-                                Books book = b.findByIsbn(isbn);
-                                if (book != null) {
-                                    double itemTotal = book.getPrice().doubleValue() * quantity;
-                                    totalPrice += itemTotal;
-                        %>
-                        <tr>
-                            <td><img class="cart-item-image" src="<%= request.getContextPath() %>/images/Covers/<%= book.getImagePath() %>" alt="<%= book.getTitle() %>"></td>
-                            <td><%= book.getTitle() %></td>
-                            <td><%= quantity %></td>
-                            <td>&euro;<%= book.getPrice() %></td>
-                            <td>&euro;<%= itemTotal %></td>
-                        </tr>
-                        <%
-                                }
-                            }
-                        %>
-                    </tbody>
-                </table>
-
-                <div class="cart-summary">
-                    <span>Totale Carrello: </span>
-                    <span>&euro;<%= totalPrice %></span>
-                </div>
-
-                <form action="<%= request.getContextPath() %>/Checkout.jsp" method="post">
-                    <button type="submit" class="checkout-button">Procedi al Checkout</button>
-                </form>
-            </div>
+    <div class="cart-container">
+      <h1>Il tuo Carrello</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Immagine</th>
+            <th>Titolo</th>
+            <th>Quantità</th>
+            <th>Prezzo</th>
+            <th>Totale</th>
+          </tr>
+        </thead>
+        <tbody>
+        <%
+          for (Map.Entry<String,Integer> e : cart.entrySet()) {
+            String isbn = e.getKey();
+            int qty    = e.getValue();
+            Books book = dao.findByIsbn(isbn);
+            if (book != null) {
+              double lineTotal = book.getPrice().doubleValue() * qty;
+              totalPrice += lineTotal;
+        %>
+          <tr>
+            <td><img class="cart-item-image"
+                     src="<%= request.getContextPath() %>/images/Covers/<%= book.getImagePath() %>"
+                     alt="<%= book.getTitle() %>"></td>
+            <td><%= book.getTitle() %></td>
+            <td><%= qty %></td>
+            <td>&euro;<%= book.getPrice() %></td>
+            <td>&euro;<%= String.format("%.2f", lineTotal) %></td>
+          </tr>
+        <%
+            }
+          }
+        %>
+        </tbody>
+      </table>
+      <div class="cart-summary">
+        <span>Totale Carrello:</span>
+        <span>&euro;<%= String.format("%.2f", totalPrice) %></span>
+      </div>
+      <form action="<%= request.getContextPath() %>/Checkout.jsp" method="post">
+        <button type="submit" class="checkout-button">Procedi al Checkout</button>
+      </form>
+    </div>
 <%
-        }
-    } else {
-%>
-        <p>Per visualizzare il carrello, devi prima effettuare il login.</p>
-<%
-    }
+  }
 %>
 
-<%@ include file="/jsp/Footer.jsp" %>
-
+  <%@ include file="/jsp/Footer.jsp" %>
 </body>
 </html>

@@ -12,7 +12,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  background-color: #A3C8FF;
+  background-color: var(--underline) !important;
   padding: 1rem 2rem;
   gap: 2rem;
   box-sizing: border-box;

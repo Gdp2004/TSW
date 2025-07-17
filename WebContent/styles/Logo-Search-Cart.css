@@ -181,14 +181,4 @@
   justify-content: center;
 }
 
-/* SEZIONE SOTTO – Bestseller-Culturia */
-#Bestseller-Culturia {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 2rem 0;
-}
-#Bestseller-Culturia img {
-  max-width: 100%;
-  height: auto;
-}
+

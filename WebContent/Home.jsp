@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles/Nav-bar-1.css">
   <link rel="stylesheet" href="styles/Logo-Search-Cart.css">
   <link rel="stylesheet" href="styles/Bestseller-List.css">
+  <link rel="stylesheet" href="styles/Culturia.css">
 
   
   <script src="scripts/Advertisement-1.js" defer></script>
@@ -35,9 +36,13 @@
 	</div>
 	
 	
-	<!-- LOGO + SEARCH BAR + CART/CHECKOUT + BESTSELLER CULTURIA-->
+	<!-- LOGO + SEARCH BAR + CART/CHECKOUT -->
 	
 	<%@ include file="jsp/Logo-Search-Cart.jsp" %>
+	
+	<!-- BESTSELLER CULTURIA -->
+	
+	<%@ include file="jsp/Culturia.jsp" %>
 	
 	<!-- BESTSELLERS CAROUSEL -->
 	

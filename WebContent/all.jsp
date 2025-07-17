@@ -1,20 +1,19 @@
 <%@ page language="java"
          contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"
-         import="java.util.List, java.util.Map, java.util.HashMap, it.unisa.Model.Books, it.unisa.Model.DAO.BooksDao" %>
+         import="java.util.List, java.util.Map, java.util.HashMap,
+                 javax.naming.Context, javax.naming.InitialContext, javax.sql.DataSource,
+                 it.unisa.Model.Books, it.unisa.Model.DAO.BooksDao" %>
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Books</title>
-  <link rel="stylesheet" href="styles/Cart.css">
-  
   <!-- FontAwesome per le icone -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
-  <!-- CSS -->
+  <!-- I tuoi CSS -->
   <link rel="stylesheet"
         href="${pageContext.request.contextPath}/styles/Nav-bar-1.css"/>
   <link rel="stylesheet"
@@ -91,48 +90,43 @@
 </head>
 <body>
 
-<%
-    // Controllo se l'utente è loggato
-    Boolean logged = Boolean.TRUE.equals(session.getAttribute("logged"));
-    String email = (String) session.getAttribute("email");
-
-    // Recupero o genero la lista randomBooks in sessione
-    @SuppressWarnings("unchecked")
-    List<Books> randomBooks = (List<Books>) session.getAttribute("randomBooks");
-    if (randomBooks == null) {
-        Context initCtx = new InitialContext();
-        Context envCtx  = (Context) initCtx.lookup("java:comp/env");
-        DataSource ds   = (DataSource) envCtx.lookup("jdbc/Database");
-        BooksDao dao    = new BooksDao(ds);
-        randomBooks     = dao.findRandom();
-        session.setAttribute("randomBooks", randomBooks);
-    }
-    
-    // Recupero il carrello dalla sessione (se esiste) o inizializzo un nuovo carrello
-    Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-    if (cart == null) {
-        cart = new HashMap<>();
-        session.setAttribute("cart", cart);
-    }
-
-    // Verifica l'azione di aggiunta al carrello
-    String isbnToAdd = request.getParameter("isbn");
-    if (isbnToAdd != null && !isbnToAdd.isEmpty()) {
-        // Se l'articolo è già nel carrello, incremento la quantità
-        cart.put(isbnToAdd, cart.getOrDefault(isbnToAdd, 0) + 1);
-        session.setAttribute("cartSize", cart.size()); // Aggiorno la dimensione del carrello
-    }
+<% 
+  // 1) Recupera o inizializza il carrello in sessione (Map<ISBN, qty>)
+  @SuppressWarnings("unchecked")
+  Map<String,Integer> cart = (Map<String,Integer>) session.getAttribute("cart");
+  if (cart == null) {
+    cart = new HashMap<>();
+    session.setAttribute("cart", cart);
+  }
+  // 2) Se arriva isbn in GET/POST, aggiungilo
+  String isbnToAdd = request.getParameter("isbn");
+  if (isbnToAdd != null && !isbnToAdd.isEmpty()) {
+    cart.put(isbnToAdd, cart.getOrDefault(isbnToAdd,0) + 1);
+    session.setAttribute("cartSize", cart.values().stream().mapToInt(i->i).sum());
+  }
+  // 3) Carica i libri casuali in sessione (una sola volta)
+  @SuppressWarnings("unchecked")
+  List<Books> randomBooks = (List<Books>) session.getAttribute("randomBooks");
+  if (randomBooks == null) {
+    Context initCtx = new InitialContext();
+    Context envCtx  = (Context) initCtx.lookup("java:comp/env");
+    DataSource ds   = (DataSource) envCtx.lookup("jdbc/Database");
+    BooksDao dao    = new BooksDao(ds);
+    randomBooks     = dao.findRandom();
+    session.setAttribute("randomBooks", randomBooks);
+  }
 %>
 
 <%@ include file="/jsp/Nav-bar-1.jsp" %>
 <%@ include file="/jsp/Logo-Search-Cart.jsp" %>
+<%@ include file="/jsp/Culturia.jsp" %>
 
 <h1>All Books</h1>
 
 <div class="books-grid">
   <%
-      if (randomBooks != null && !randomBooks.isEmpty()) {
-        for (Books b : randomBooks) {
+    if (randomBooks != null && !randomBooks.isEmpty()) {
+      for (Books b : randomBooks) {
   %>
     <div class="book-card">
       <div class="image-wrapper">
@@ -144,17 +138,11 @@
       <h3><%= b.getTitle() %></h3>
       <p class="author">by <%= b.getAuthor() %></p>
 
-      <% if (logged) { %>
-        <!-- Quick Add form per aggiungere un prodotto al carrello -->
-        <form action="<%= request.getContextPath() %>/AddToCartServlet" method="post" style="display:inline;">
-          <input type="hidden" name="isbn" value="<%= b.getIsbn() %>"/>
-          <button type="submit" class="quick-add">Quick Add</button>
-        </form>
-      <% } else { %>
-        <a href="<%= request.getContextPath() %>/jsp/LoginForm.jsp?mode=login"
-           class="quick-add">Quick Add</a>
-      <% } %>
-
+      <!-- Quick Add: sempre visibile, funziona anche da anonimo -->
+      <form action="" method="get" style="display:inline;">
+        <input type="hidden" name="isbn" value="<%= b.getIsbn() %>"/>
+        <button type="submit" class="quick-add">Quick Add</button>
+      </form>
     </div>
   <%
       }
