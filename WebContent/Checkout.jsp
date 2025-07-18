@@ -363,17 +363,17 @@
           <label class="payment-field">
             <input type="radio" name="paymentMethod" value="credit_card" required/>
             <i class="fa-solid fa-credit-card"></i>
-            <div>Carta di Credito</div>
+            Carta di Credito
           </label>
           <label class="payment-field">
             <input type="radio" name="paymentMethod" value="paypal" required/>
             <i class="fa-brands fa-paypal"></i>
-            <div>PayPal</div>
+            PayPal
           </label>
           <label class="payment-field">
             <input type="radio" name="paymentMethod" value="bank_transfer" required/>
             <i class="fa-solid fa-building-columns"></i>
-            <div>Bonifico Bancario</div>
+            Bonifico Bancario
           </label>
         </div>
 
