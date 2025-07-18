@@ -32,8 +32,7 @@
   <!-- CSS personalizzati -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/Logo-Search-Cart.css"/>
 
-  <!-- JavaScript -->
-  <script src="${pageContext.request.contextPath}/scripts/Logo-Search-Bar.js" defer></script>
+ 
 </head>
 <body>
 

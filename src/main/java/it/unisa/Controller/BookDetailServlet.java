@@ -1,6 +1,7 @@
 package it.unisa.Controller;
 
 import java.io.IOException;
+
 import javax.sql.DataSource;
 
 import it.unisa.Model.Books;
@@ -31,7 +32,7 @@ public class BookDetailServlet extends HttpServlet {
         if (ds == null) {
             throw new ServletException("DataSource non trovato nel contesto.");
         }
-        
+
         String isbn = request.getParameter("isbn");
         if (isbn == null || isbn.isBlank()) {
           response.sendRedirect(request.getContextPath()+"/all.jsp");

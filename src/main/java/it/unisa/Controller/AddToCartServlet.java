@@ -3,6 +3,7 @@ package it.unisa.Controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,53 +21,56 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        // Verifica se l'utente è loggato
-        Boolean logged = Boolean.TRUE.equals(session.getAttribute("logged"));
-        if (!logged) {
-            // Non autenticato: rimanda al form di login
-            response.sendRedirect(request.getContextPath() + "/jsp/LoginForm.jsp?mode=login");
-            return;
+        // 0) Genera un cartId se non c'è ancora
+        String cartId = (String) session.getAttribute("cartId");
+        if (cartId == null) {
+            cartId = UUID.randomUUID().toString();
+            session.setAttribute("cartId", cartId);
         }
 
-        // Preleva l'ISBN e la quantità passata dal form
+        // 1) Recupera l'ISBN e la quantità (default = 1)
         String isbn = request.getParameter("isbn");
-        Integer quantity = 1; // Impostiamo una quantità di default di 1
-
-        // Se la quantità viene passata tramite il parametro, la usiamo
-        if (request.getParameter("quantity") != null) {
+        int quantity = 1;
+        String qtyParam = request.getParameter("quantity");
+        if (qtyParam != null) {
             try {
-                quantity = Integer.parseInt(request.getParameter("quantity"));
+                quantity = Integer.parseInt(qtyParam);
             } catch (NumberFormatException e) {
-                quantity = 1; // Se la quantità non è valida, settiamo il valore a 1
+                quantity = 1;
             }
         }
 
-        // Se l'ISBN è nullo o vuoto, rimanda alla pagina dei libri
+        // 2) Se manca l'ISBN, torna alla lista
         if (isbn == null || isbn.isBlank()) {
             response.sendRedirect(request.getContextPath() + "/all.jsp");
             return;
         }
 
-        // Ottiene (o inizializza) il carrello in sessione
+        // 3) Ottieni o crea la Map<String, Integer> (isbn→qty) in sessione
         @SuppressWarnings("unchecked")
-        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+        Map<String,Integer> cart = (Map<String,Integer>) session.getAttribute("cart");
         if (cart == null) {
             cart = new HashMap<>();
         }
 
-        // Aggiunge o aggiorna la quantità dell'ISBN nel carrello
+        // 4) Aggiorna la quantità per quell'ISBN
         cart.put(isbn, cart.getOrDefault(isbn, 0) + quantity);
         session.setAttribute("cart", cart);
 
-        // Aggiorna la dimensione del carrello
-        session.setAttribute("cartSize", cart.size());
+        // 5) Ricalcola il numero totale di unità (non di tipologie)
+        int totalItems = cart.values().stream().mapToInt(Integer::intValue).sum();
+        session.setAttribute("cartSize", totalItems);
 
-        // Torna alla pagina di provenienza (referer) o alla home se mancante
+        // 6) Rimanda indietro aggiungendo un flag per il popup
         String referer = request.getHeader("Referer");
+        String addedFlag = "added=true";
+        String target;
         if (referer != null && !referer.isBlank()) {
-            response.sendRedirect(referer);
+            target = referer + (referer.contains("?") ? "&" : "?") + addedFlag;
         } else {
-            response.sendRedirect(request.getContextPath() + "/Home.jsp");
+            // se non hai referer, di default alla pagina dei libri
+            target = request.getContextPath() + "/all.jsp?" + addedFlag;
         }
+        response.sendRedirect(target);
     }
 }
