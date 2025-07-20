@@ -9,27 +9,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import it.unisa.Model.Category;
 
 public class CategoryDao {
 
-	private static DataSource ds;
+	private final DataSource ds;
 
-	static {
-		try {
-			Context initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-
-			ds = (DataSource) envCtx.lookup("jdbc/Database");
-
-		} catch (NamingException e) {
-			System.out.println("Error:" + e.getMessage());
-		}
+	public CategoryDao(DataSource ds) {
+		
+		this.ds = ds;
+		
 	}
 
     public List<Category> doRetrieveAll(int offset, int limit) {
@@ -115,6 +106,51 @@ public class CategoryDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+    
+    
+    public List<Category> searchByKeyword(String q) {
+        if (q == null || q.isBlank()) {
+            return new ArrayList<>();
+        }
+
+        String sql = "SELECT category_id, name, description "
+                   + "FROM Category "
+                   + "WHERE name LIKE ? "
+                   + "   OR description LIKE ? "
+                   + "   OR category_id = ?";
+        List<Category> results = new ArrayList<>();
+        String wildcard = "%" + q.trim() + "%";
+
+        try (Connection conn = ds.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // wildcard search on name & description
+            ps.setString(1, wildcard);
+            ps.setString(2, wildcard);
+            // exact match on the ID column
+            ps.setString(3, q.trim());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Category c = new Category();
+                    // assuming categoryId is numeric; if it's really varchar, adjust accordingly
+                    try {
+                        c.setCategoryId(Integer.parseInt(rs.getString("category_id")));
+                    } catch (NumberFormatException ex) {
+                        c.setCategoryId(0);
+                    }
+                    c.setName(rs.getString("name"));
+                    c.setDescription(rs.getString("description"));
+                    results.add(c);
+                }
+            }
+
+            return results;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

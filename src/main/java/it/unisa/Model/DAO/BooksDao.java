@@ -333,4 +333,84 @@ public class BooksDao {
             throw new RuntimeException("Database query error (findRandom)", e);
         }
     }
+
+    public List<Books> searchByKeyword(String q) {
+        if (q == null || q.isBlank()) {
+            return new ArrayList<>();
+        }
+        String sql = "SELECT isbn, title, author, description, price, stock_qty, image_path "
+                   + "FROM Book "
+                   + "WHERE title LIKE ? "
+                   + "   OR author LIKE ? "
+                   + "   OR description LIKE ? "
+                   + "   OR isbn = ?";
+        List<Books> results = new ArrayList<>();
+        String wildcard = "%" + q.trim() + "%";
+
+        try (Connection conn = ds.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, wildcard);
+            ps.setString(2, wildcard);
+            ps.setString(3, wildcard);
+            ps.setString(4, q.trim());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Books b = new Books();
+                    b.setIsbn(rs.getString("isbn"));
+                    b.setTitle(rs.getString("title"));
+                    b.setAuthor(rs.getString("author"));
+                    b.setDescription(rs.getString("description"));
+                    b.setPrice(rs.getBigDecimal("price"));
+                    b.setStockQty(rs.getInt("stock_qty"));
+                    b.setImagePath(rs.getString("image_path"));
+                    results.add(b);
+                }
+            }
+            return results;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public List<Books> findByCategoryIds(List<String> categoryIds) throws SQLException {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // costruisci dinamicamente la clausola IN (?, ?, …)
+        String placeholders = String.join(",", categoryIds.stream().map(id -> "?").toArray(String[]::new));
+        String sql = "SELECT b.isbn, b.title, b.author, b.description, b.price, b.stock_qty, b.image_path "
+                   + "FROM Book b "
+                   + "JOIN BookCategory bc ON b.isbn = bc.isbn "
+                   + "WHERE bc.category_id IN (" + placeholders + ") "
+                   + "GROUP BY b.isbn";
+
+        List<Books> books = new ArrayList<>();
+        try (Connection conn = ds.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // bind di tutti gli ID
+            for (int i = 0; i < categoryIds.size(); i++) {
+                ps.setString(i + 1, categoryIds.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Books b = new Books();
+                    b.setIsbn(rs.getString("isbn"));
+                    b.setTitle(rs.getString("title"));
+                    b.setAuthor(rs.getString("author"));
+                    b.setDescription(rs.getString("description"));
+                    b.setPrice(rs.getBigDecimal("price"));
+                    b.setStockQty(rs.getInt("stock_qty"));
+                    b.setImagePath(rs.getString("image_path"));
+                    books.add(b);
+                }
+            }
+        }
+        return books;
+    }
 }

@@ -19,9 +19,8 @@
 <body>
 
 <nav id="nav-bar">
-  <a href="${pageContext.request.contextPath}/Store.jsp" class="nav-link">Store</a>
-  <a href="${pageContext.request.contextPath}/Membership.jsp" class="nav-link">Membership</a>
-  <a href="${pageContext.request.contextPath}/About Us.jsp" class="nav-link">About Us</a>
+  <a href="${pageContext.request.contextPath}/jsp/Membership.jsp" class="nav-link">Membership</a>
+  <a href="${pageContext.request.contextPath}/jsp/AboutUs.jsp" class="nav-link">About Us</a>
 
   <% if (username != null) { %>
     <div id="accountMenu"
