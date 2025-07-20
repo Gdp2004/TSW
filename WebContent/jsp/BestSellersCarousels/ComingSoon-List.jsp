@@ -55,10 +55,12 @@
           %>
           <div class="book-col">
           <a href="<%= request.getContextPath()%>/bookdetailservlet?isbn=<%= b.getIsbn()%>">
-            <img
-              src="<%=request.getContextPath()%>/images/Covers/<%=b.getImagePath()%>"
-              alt="<%=b.getTitle()%>"
-            />
+      <% String imgPath = b.getImagePath(); %>
+        <img class="cover"
+     src="<%= (imgPath != null && !imgPath.isBlank())
+           ? request.getContextPath() + "/images/Covers/" + imgPath
+           : request.getContextPath() + "/imageservlet?isbn=" + b.getIsbn() %>"
+     alt="Copertina di <%= b.getTitle() %>"/>
             </a>
             <h6 title="<%=b.getTitle()%>"><%=b.getTitle()%></h6>
             <small><%=b.getAuthor()%></small>

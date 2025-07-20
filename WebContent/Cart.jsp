@@ -117,9 +117,12 @@
         %>
           <tr>
             <td>
-              <img class="cart-item-image"
-                   src="<%= request.getContextPath() %>/images/Covers/<%= book.getImagePath() %>"
-                   alt="<%= book.getTitle() %>">
+<% String imgPath = book.getImagePath(); %>
+<img class="cart-item-image"
+     src="<%= (imgPath != null && !imgPath.isBlank())
+           ? request.getContextPath() + "/images/Covers/" + imgPath
+           : request.getContextPath() + "/ImageServlet?isbn=" + book.getIsbn() %>"
+     alt="Copertina di <%= book.getTitle() %>"/>
             </td>
             <td><%= book.getTitle() %></td>
             <td><%= qty %></td>

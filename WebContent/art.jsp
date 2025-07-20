@@ -131,9 +131,12 @@
     <div class="book-card">
       <div class="image-wrapper">
       <a href="<%= request.getContextPath()%>/bookdetailservlet?isbn=<%= b.getIsbn()%>">
+      <% String imgPath = b.getImagePath(); %>
         <img class="cover"
-             src="<%= request.getContextPath() %>/images/Covers/<%= b.getImagePath() %>"
-             alt="Copertina di <%= b.getTitle() %>"/>
+     src="<%= (imgPath != null && !imgPath.isBlank())
+           ? request.getContextPath() + "/images/Covers/" + imgPath
+           : request.getContextPath() + "/imageservlet?isbn=" + b.getIsbn() %>"
+     alt="Copertina di <%= b.getTitle() %>"/>
              </a>
         <i class="fa-regular fa-heart favorite-icon"></i>
       </div>

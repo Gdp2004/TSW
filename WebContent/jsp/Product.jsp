@@ -157,9 +157,12 @@
     <div class="product-detail">
       <!-- Immagine ridimensionata -->
       <div class="product-image-wrapper">
+      <% String imgPath = book.getImagePath(); %>
         <img class="product-image"
-             src="<%=request.getContextPath()%>/images/Covers/<%=book.getImagePath()%>"
-             alt="Copertina di <%=book.getTitle()%>"/>
+     src="<%= (imgPath != null && !imgPath.isBlank())
+           ? request.getContextPath() + "/images/Covers/" + imgPath
+           : request.getContextPath() + "/imageservlet?isbn=" + book.getIsbn() %>"
+     alt="Copertina di <%= book.getTitle() %>"/>
       </div>
       <!-- Dati libro -->
       <div class="product-info">
@@ -167,6 +170,7 @@
         <p class="author">di <%= book.getAuthor() %></p>
         <p class="description"><%= book.getDescription() %></p>
         <p class="price">Prezzo: &euro;<%= book.getPrice() %></p>
+        <p class="isbn">ISBN: <%= book.getIsbn() %></p>
 
         <!-- Aggiungi al carrello -->
         <form action="<%=request.getContextPath()%>/AddToCartServlet" method="post">

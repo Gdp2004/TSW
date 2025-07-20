@@ -3,9 +3,7 @@
     String username = (String) session.getAttribute("nome");
     boolean isAdmin  = Boolean.TRUE.equals(session.getAttribute("isAdmin"));
     // decide URL based on role
-    String settingsUrl = isAdmin
-        ? request.getContextPath() + "/Admin.jsp"
-        : request.getContextPath() + "/Impostazioni.jsp";
+    
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -42,7 +40,7 @@
       </form>
 
       <a id="settingsLink"
-         href="<%= settingsUrl %>"
+         href="<%= request.getContextPath() %>/Impostazioni.jsp"
          class="logout-button"
          style="display:none; margin:0; text-decoration:none;">
         Impostazioni

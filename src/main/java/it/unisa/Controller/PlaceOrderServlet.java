@@ -2,18 +2,25 @@ package it.unisa.Controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.Map;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 
+import it.unisa.Model.Books;
+import it.unisa.Model.DAO.BooksDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import javax.sql.DataSource;
-import it.unisa.Model.DAO.BooksDao;
-import it.unisa.Model.Books;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/placeorderservlet")
 public class PlaceOrderServlet extends HttpServlet {
@@ -62,19 +69,22 @@ public class PlaceOrderServlet extends HttpServlet {
             })
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        
+
         try (Connection con = ds.getConnection()) {
             // Inserisce solo in Orders
             try (PreparedStatement ps = con.prepareStatement(
                     INSERT_ORDER, Statement.RETURN_GENERATED_KEYS)) {
-                if (userId != null) ps.setInt(1, userId);
-                else                ps.setNull(1, Types.INTEGER);
+                if (userId != null) {
+					ps.setInt(1, userId);
+				} else {
+					ps.setNull(1, Types.INTEGER);
+				}
                 ps.setString(2, email);
                 ps.setString(3, address);
                 ps.setBigDecimal(4, total);
 
                 ps.executeUpdate();
-                
+
             }
         } catch (Exception ex) {
             throw new ServletException("Errore durante il salvataggio dell'ordine", ex);
