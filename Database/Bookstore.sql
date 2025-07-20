@@ -50,42 +50,9 @@ CREATE TABLE IF NOT EXISTS UserAccount (
   created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------
--- 5) CARRELLI (guest e utenti)
--- --------------------------------------------------
-CREATE TABLE IF NOT EXISTS Cart (
-  cart_id        CHAR(36) NOT NULL PRIMARY KEY,  -- UUID
-  user_id        INT NULL,
-  created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  last_update    DATETIME NOT NULL 
-      DEFAULT CURRENT_TIMESTAMP
-      ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id)
-    REFERENCES UserAccount(user_id)
-    ON DELETE CASCADE
-);
 
 -- --------------------------------------------------
--- 6) RIGHE DEL CARRELLO
--- --------------------------------------------------
-CREATE TABLE IF NOT EXISTS CartItem (
-  cart_item_id   INT AUTO_INCREMENT PRIMARY KEY,
-  cart_id        CHAR(36) NOT NULL,
-  isbn           VARCHAR(20) NOT NULL,
-  quantity       INT NOT NULL DEFAULT 1,
-  unit_price     DECIMAL(10,2) NOT NULL,
-  added_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (cart_id)
-    REFERENCES Cart(cart_id)
-    ON DELETE CASCADE,
-  FOREIGN KEY (isbn)
-    REFERENCES Book(isbn)
-    ON DELETE RESTRICT,
-  UNIQUE KEY (cart_id, isbn)
-);
-
--- --------------------------------------------------
--- 7) ORDINI
+-- 5) ORDINI
 -- --------------------------------------------------
 CREATE TABLE IF NOT EXISTS Orders (
   order_id       INT AUTO_INCREMENT PRIMARY KEY,
@@ -100,19 +67,3 @@ CREATE TABLE IF NOT EXISTS Orders (
     REFERENCES UserAccount(user_id)
 );
 
--- --------------------------------------------------
--- 8) RIGHE DELL’ORDINE
--- --------------------------------------------------
-CREATE TABLE IF NOT EXISTS OrderItem (
-  order_item_id  INT AUTO_INCREMENT PRIMARY KEY,
-  order_id       INT NOT NULL,
-  isbn           VARCHAR(20) NOT NULL,
-  quantity       INT NOT NULL,
-  unit_price     DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (order_id)
-    REFERENCES Orders(order_id)
-    ON DELETE CASCADE,
-  FOREIGN KEY (isbn)
-    REFERENCES Book(isbn)
-    ON DELETE RESTRICT
-);
