@@ -29,7 +29,7 @@ public class ProfileUpdateServlet extends HttpServlet {
     public void init() throws ServletException {
         try {
             Context ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/Database");
+            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/Bookstore");
         } catch (NamingException e) {
             throw new ServletException("Impossibile trovare DataSource", e);
         }

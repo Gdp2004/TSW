@@ -110,7 +110,7 @@
   if (artBooks == null) {
     Context initCtx = new InitialContext();
     Context envCtx  = (Context) initCtx.lookup("java:comp/env");
-    DataSource ds   = (DataSource) envCtx.lookup("jdbc/Database");
+    DataSource ds   = (DataSource) envCtx.lookup("jdbc/Bookstore");
     BooksDao dao    = new BooksDao(ds);
     artBooks     = dao.findByCategory("3");
     session.setAttribute("artBooks", artBooks);

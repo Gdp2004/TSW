@@ -22,7 +22,7 @@ public class DataSourceInizialize implements ServletContextListener {
             Context initCtx = new InitialContext();
             Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-            ds= (DataSource) envCtx.lookup("jdbc/Database");
+            ds= (DataSource) envCtx.lookup("jdbc/Bookstore");
 
         } catch (NamingException e){
             System.out.println("error: " + e.getMessage());

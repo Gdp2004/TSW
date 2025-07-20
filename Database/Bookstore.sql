@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS Book (
   description   TEXT,
   price         DECIMAL(10,2) NOT NULL,
   stock_qty     INT NOT NULL DEFAULT 0,
-  image_path    VARCHAR(500) NOT NULL
+  image_path    VARCHAR(500) NOT NULL,
+  image_blob	BLOB			NULL
 );
 
 -- --------------------------------------------------

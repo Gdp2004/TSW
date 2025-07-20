@@ -2,7 +2,7 @@
 
 <Context>
 
-<Resource name="jdbc/Database"
+<Resource name="jdbc/Bookstore"
           auth="Container"
           factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
           type="javax.sql.DataSource"

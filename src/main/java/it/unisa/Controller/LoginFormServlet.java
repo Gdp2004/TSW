@@ -31,7 +31,7 @@ public class LoginFormServlet extends HttpServlet {
         try {
             Context initContext = new InitialContext();
             Context envContext = (Context) initContext.lookup("java:/comp/env");
-            dataSource = (DataSource) envContext.lookup("jdbc/Database");
+            dataSource = (DataSource) envContext.lookup("jdbc/Bookstore");
         } catch (NamingException e) {
             throw new ServletException("Errore durante il lookup del DataSource", e);
         }

@@ -32,7 +32,7 @@ public class ImageServlet extends HttpServlet {
         try {
             Context init = new InitialContext();
             Context env  = (Context) init.lookup("java:/comp/env");
-            ds = (DataSource) env.lookup("jdbc/Database");
+            ds = (DataSource) env.lookup("jdbc/Bookstore");
         } catch (NamingException e) {
             throw new ServletException("Impossibile reperire DataSource", e);
         }

@@ -30,7 +30,7 @@ public class SearchServlet extends HttpServlet {
     public void init() throws ServletException {
         try {
             Context ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/Database");
+            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/Bookstore");
         } catch (Exception e) {
             throw new ServletException("Unable to lookup DataSource", e);
         }

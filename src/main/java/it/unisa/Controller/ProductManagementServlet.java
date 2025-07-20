@@ -76,7 +76,7 @@ public class ProductManagementServlet extends HttpServlet {
             Context initCtx = new InitialContext();
             Context envCtx  = (Context) initCtx.lookup("java:comp/env");
             // "jdbc/Database" è il name che hai definito in <resource-ref> o in context.xml
-            ds = (DataSource) envCtx.lookup("jdbc/Database");
+            ds = (DataSource) envCtx.lookup("jdbc/Bookstore");
         } catch (NamingException e) {
             throw new ServletException("Impossibile reperire il DataSource", e);
         }
